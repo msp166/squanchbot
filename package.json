@@ -1,0 +1,22 @@
+{
+  "name": "squanchbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/muiro/squanchbot.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/muiro/squanchbot/issues"
+  },
+  "homepage": "https://github.com/muiro/squanchbot",
+  "dependencies": {
+    "discord.js": "^8.0.0"
+  }
+}
