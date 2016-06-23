@@ -116,7 +116,7 @@ Displays a list of all commands, including user-added audio commands.
 #### !delete
 When given the name of an audio command, this archives the file and removes it from the list of playable audio commands.
 
-### User-created Audit Commands
+### User-created Audio Commands
 
 Users can create new audio commands by PMing audio files to the bot. These will then become available to all users and will cause squanchbot to connect to the requesting user's voice channel and play the file on command.
 
