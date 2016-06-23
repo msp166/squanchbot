@@ -49,9 +49,9 @@ First you will need to acquire a bot API token, then add that token to squanchbo
 1. Click **Create a Bot User**, then confirm the warning
 1. Take note of the **Client/Application ID** and **Token** as you will need these for config
 
-#### Editing config/defaults.json
+#### Editing config/default.json
 
-Open config/defaults.json in your favorite text editor. Enter your **Token** like so:
+Open config/default.json in your favorite text editor. Enter your **Token** like so:
 ```
 {
 	"bot": {
@@ -126,4 +126,4 @@ The new command name will be a lowercased version of the file name without the e
 
 To utilize the wolfram alpha integration, you will need to apply to their API program here: [WolframAlpha API](http://products.wolframalpha.com/api/). This is free for personal use.
 
-Once you have signed up and have your API key, edit config/defaults.json, add your key, and also set "enabeld" to true. The bot will need to be restarted for this to take effect.
+Once you have signed up and have your API key, edit config/default.json, add your key, and also set "enabeld" to true. The bot will need to be restarted for this to take effect.
