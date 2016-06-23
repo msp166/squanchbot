@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/muiro/squanchbot",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "config": "^1.21.0",

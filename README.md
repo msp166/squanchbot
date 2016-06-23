@@ -5,7 +5,7 @@ This is a bot for [discord](https://discordapp.com). It was created for the use 
 
 By convention, most discord bots run as a single public entity that can be invited to servers. However, because this bot accepts file uploads from users and can end up storing quite a bit of data, I decided to not do that. If you would like to add this bot to your server you will need to generate a discord API key and run / host it for yourself.
 
-## Running the bot
+## Hosting the bot
 
 You will need to either download the source code from the gihtub repo, or use [git](https://git-scm.com/) to clone the project directly. You will also need [Node.js](https://nodejs.org) to run the project.
 
@@ -35,3 +35,95 @@ $> npm install
 ```
 
 The bot is now installed and ready to be configured with your discord developer API token.
+
+### Configuring
+
+First you will need to acquire a bot API token, then add that token to squanchbot's configuration file.
+
+#### Bot API Token
+
+1. Log in to your discord account and go to the [Developers page](https://discordapp.com/developers/)
+1. Open the **My Applications** link
+1. Click on **New Application**
+1. Fill in all required fields here. Add an icon if you want. When done press **Create Application**
+1. Click **Create a Bot User**, then confirm the warning
+1. Take note of the **Client/Application ID** and **Token** as you will need these for config
+
+#### Editing config/defaults.json
+
+Open config/defaults.json in your favorite text editor. Enter your **Token** like so:
+```
+{
+	"bot": {
+		"token": "MSsoesuffstMSNenuf08guau-oeu88hsoeu_fe8HDed"
+	}
+}
+```
+
+All of the required configuration is done, you can now run the bot
+
+## Running the bot
+
+Run the bot by issuing the following command in the squanchbot directory:
+```
+$> npm start
+```
+
+### Adding to a Discord server
+
+A discord bot is added to a server by visiting a URL on your browser. Make sure you are first logged in and that you have permission to invite users to your server.
+
+This is the URL you will need to visit. Replace the ```*******************``` with your **Client/Application ID** created above.
+```
+https://discordapp.com/oauth2/authorize?client_id=*******************&scope=bot&permissions=66321471
+```
+
+Choose the server you want the bot to be added to (you can only add bots to servers you can invite users to), disable any permissions you don't think the bot should have, then click **Authorize**.
+
+*Note: This bot only uses edit message permissions, so everything else is unecessary. Functionality that uses these permissions may be added in the future.*
+
+## Usage
+
+Squnachbot listens for a number of commands in the server's text channel, each of which begin with the ! character. There are a number of built-in commands, and more commands can be added by you and your users. There are also a few commands which squanchbot can receive through a PM.
+
+### Channel Commands
+
+#### !commands
+Displays a list of all commands, including user-added audio commands. Message dissapears after 10 seconds to avoid channel clutter.
+
+#### !photograph
+Takes the URL of an image and processes that image inside the "look at this photograph" meme.
+Example: ```!photograph http://website.com/funnypic.jpg```
+
+#### !ping
+Responds with a rude "pong" type message.
+
+#### !rule34
+If it exists...
+
+#### !stop
+Stops all currently playing audio.
+
+#### !wolfram 
+Queries [WolframAlpha](https://www.wolframalpha.com) and displays all results. Simply type your query after !wolfram.
+Example: ```!wolfram poisson distribution```
+
+### PM Commands
+
+#### !commands or commands
+Displays a list of all commands, including user-added audio commands.
+
+#### !delete
+When given the name of an audio command, this archives the file and removes it from the list of playable audio commands.
+
+### User-created Audit Commands
+
+Users can create new audio commands by PMing audio files to the bot. These will then become available to all users and will cause squanchbot to connect to the requesting user's voice channel and play the file on command.
+
+The new command name will be a lowercased version of the file name without the extension. Thus, if the user uploads a file called 'YeAAaHhHh.ogg' the new command will be '!yeaaahhhh'.
+
+## WolframAlpha Integration
+
+To utilize the wolfram alpha integration, you will need to apply to their API program here: [WolframAlpha API](http://products.wolframalpha.com/api/). This is free for personal use.
+
+Once you have signed up and have your API key, edit config/defaults.json, add your key, and also set "enabeld" to true. The bot will need to be restarted for this to take effect.
