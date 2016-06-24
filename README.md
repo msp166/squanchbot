@@ -15,28 +15,29 @@ By convention, most discord bots run as a single public entity that can be invit
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
+
 - [Hosting the bot](#hosting-the-bot)
-- [Prerequisites](#prerequisites)
-- [Installing](#installing)
-- [Configuring](#configuring)
-  - [Bot API Token](#bot-api-token)
-  - [Editing config/default.json](#editing-configdefaultjson)
+  - [Prerequisites](#prerequisites)
+  - [Installing](#installing)
+  - [Configuring](#configuring)
+    - [Bot API Token](#bot-api-token)
+    - [Editing config/default.json](#editing-configdefaultjson)
 - [Running the bot](#running-the-bot)
-- [Adding to a Discord server](#adding-to-a-discord-server)
+  - [Adding to a Discord server](#adding-to-a-discord-server)
 - [Usage](#usage)
-- [Channel Commands](#channel-commands)
-  - [!commands](#commands)
-  - [!photograph](#photograph)
-  - [!ping](#ping)
-  - [!rule34](#rule34)
-  - [!stop](#stop)
-- [!ud](#ud)
-  - [!wolfram](#wolfram)
-- [PM Commands](#pm-commands)
-  - [!commands or commands](#commands-or-commands)
-  - [!delete](#delete)
-- [User-created Audio Commands](#user-created-audio-commands)
-  - [WolframAlpha Integration](#wolframalpha-integration)
+  - [Channel Commands](#channel-commands)
+    - [!commands](#commands)
+    - [!photograph](#photograph)
+    - [!ping](#ping)
+    - [!rule34](#rule34)
+    - [!stop](#stop)
+    - [!ud](#ud)
+    - [!wolfram](#wolfram)
+  - [PM Commands](#pm-commands)
+    - [!commands or commands](#commands-or-commands)
+    - [!delete](#delete)
+  - [User-created Audio Commands](#user-created-audio-commands)
+- [WolframAlpha Integration](#wolframalpha-integration)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -139,7 +140,7 @@ If it exists...
 #### !stop
 Stops all currently playing audio.
 
-### !ud
+#### !ud
 Looks up a word on [Urban Dictionary](http://www.urbandictionary.com) and returns the first result
 
 #### !wolfram 
