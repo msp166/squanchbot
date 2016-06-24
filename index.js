@@ -5,6 +5,7 @@ var uuid = require('node-uuid');
 var request = require('request');
 var im = require('imagemagick');
 var config = require('config');
+var urban = require('urban');
 var wolfram = null;
 
 if (config.get('wolfram.enabled') == true) {
@@ -411,6 +412,51 @@ bot.on('message', function(message) {
         bot.deleteMessage(this_message);
       }, 10000);
     });
+  }
+
+  if (message.content.startsWith('!ud ')) {
+      var query = message.content.replace(/!ud /, '');
+      var results = urban(query);
+
+      var chunks = [];
+
+      results.first(function(json){
+        console.log(json);
+        chunks.push('__**' + query + '**__\r\n');
+        var definition = json.definition;
+        if (definition.length <= 2000) {
+          chunks.push(definition);
+        } else {
+          while (definition.length >= 2000) {
+            chunks.push(definition.slice(0, 2000 - 1));
+            definition = definition.slice(2000 - 1);
+          }
+        }
+        
+        if (json.example.length > 0) {
+          chunks.push('Example: *' + json.example + '*');
+        }
+
+        var sendChunk = function(send_chunks) {
+          bot.sendMessage(message.channel, send_chunks[0], function(error){
+            if (error) {
+              console.log(error);
+              return 0;
+            }
+
+            send_chunks.shift();
+            if (send_chunks.length > 0) {
+              sendChunk(send_chunks);
+            }
+
+          });
+        };
+
+        if (chunks.length > 0) {
+          sendChunk(chunks);
+        }
+
+      });
   }
 });
 
