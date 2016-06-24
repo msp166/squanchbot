@@ -53,7 +53,7 @@ bot.on('message', function(message) {
       } else {
         bot.reply(message, 'Come on dude, that\'s not even an audio squanch. I can only do .ogg, .mp3 or .wav');
       }
-    } else if (message.content === '!commands' || message.content == 'commands') {
+    } else if (message.content === '!commands' || message.content == 'commands' || message.content === '!help' || message.content === 'help') {
       bot.reply(message, getCommands());
     } else if (message.content.startsWith('!delete ') || message.content.startsWith('delete ')) {
       var command_to_delete = '!' + message.content.replace(/!delete /, '').replace(/delete /, '');
@@ -105,7 +105,7 @@ bot.on('message', function(message) {
       });
     }
 
-    if (message.content === '!commands') {
+    if (message.content === '!commands' || message.content === '!help') {
       bot.sendMessage(message.channel, getCommands(), {}, function(error, sent_message){
         setTimeout(function(){
           bot.deleteMessage(message);
