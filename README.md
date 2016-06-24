@@ -1,9 +1,16 @@
 # squanchbot
 *Just say say what's in your squanch and people will understand* ~Rick Sanchez C-137
 
-This is a bot for [discord](https://discordapp.com). It was created for the use of a small personal server. Its main functionality is playing user defined audio clips in voice chat, but it also has a few other functions. 
+This is a bot for [discord](https://discordapp.com) written in javascript for the [Node.js](https://nodejs.org) platform. It was created for the use of a small personal server. Its main functionality is playing user defined audio clips in voice chat, but it also has a few other functions. 
 
 By convention, most discord bots run as a single public entity that can be invited to servers. However, because this bot accepts file uploads from users and can end up storing quite a bit of data, I decided to not do that. If you would like to add this bot to your server you will need to generate a discord API key and run / host it for yourself.
+
+### Feature List
++ User-created audio commands
++ Stop audio control
++ "Look at this photograph" meme generation
++ WolframAlpha queries
++ Urban Dictionary lookups
 
 ## Hosting the bot
 
@@ -103,6 +110,9 @@ If it exists...
 
 #### !stop
 Stops all currently playing audio.
+
+### !ud
+Looks up a word on [Urban Dictionary](http://www.urbandictionary.com) and returns the first result
 
 #### !wolfram 
 Queries [WolframAlpha](https://www.wolframalpha.com) and displays all results. Simply type your query after !wolfram.
