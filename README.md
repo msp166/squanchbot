@@ -14,7 +14,7 @@ By convention, most discord bots run as a single public entity that can be invit
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
+<div style="border:1px solid #8c8c8c;background-color:#f2f2f2;">
 - [Hosting the bot](#hosting-the-bot)
 - [Prerequisites](#prerequisites)
 - [Installing](#installing)
@@ -37,7 +37,7 @@ By convention, most discord bots run as a single public entity that can be invit
   - [!delete](#delete)
 - [User-created Audio Commands](#user-created-audio-commands)
   - [WolframAlpha Integration](#wolframalpha-integration)
-
+</div>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Hosting the bot
