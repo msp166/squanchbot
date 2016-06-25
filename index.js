@@ -31,8 +31,6 @@ var bot = new Discord.Client();
 
 bot.on('message', function(message) {
 
-  console.log(message);
-
   if (message.channel.name === undefined) {
     if (message.attachments.length > 0 && message.author.username != bot.user.username) {
       var filename = message.attachments[0].filename;
