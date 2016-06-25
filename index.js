@@ -31,8 +31,10 @@ var bot = new Discord.Client();
 
 bot.on('message', function(message) {
 
+  console.log(message);
+
   if (message.channel.name === undefined) {
-    if (message.attachments.length > 0) {
+    if (message.attachments.length > 0 && message.author.username != bot.user.username) {
       var filename = message.attachments[0].filename;
       var url = message.attachments[0].url;
       var extension = filename.substring(filename.lastIndexOf('.'));
@@ -74,6 +76,19 @@ bot.on('message', function(message) {
         });
       } else {
         bot.reply(message, 'Listen here squanchacho, I don\'t even know what file you\'re talking about.');
+      }
+    } else if (message.content.startsWith('!download') || message.content.startsWith('download')) {
+      var command_to_download = '!' + message.content.replace(/!download /, '').replace(/download /, '');
+      var commands = squanches.map((item) => {
+        return item.command.toLowerCase();
+      });
+      if (commands.indexOf(command_to_download) != -1) {
+        var audio_file = squanches[commands.indexOf(command_to_download)].filename;
+
+        bot.sendFile(message.channel, 'res/' + audio_file, audio_file);
+
+      } else {
+        bot.reply(message, 'You can go download a sack of squanch, I don\' have any command or file like that');
       }
     }
   } else {
@@ -415,48 +430,48 @@ bot.on('message', function(message) {
   }
 
   if (message.content.startsWith('!ud ')) {
-      var query = message.content.replace(/!ud /, '');
-      var results = urban(query);
+    var query = message.content.replace(/!ud /, '');
+    var results = urban(query);
 
-      var chunks = [];
+    var chunks = [];
 
-      results.first(function(json){
-        console.log(json);
-        chunks.push('__**' + query + '**__\r\n');
-        var definition = json.definition;
-        if (definition.length <= 2000) {
-          chunks.push(definition);
-        } else {
-          while (definition.length >= 2000) {
-            chunks.push(definition.slice(0, 2000 - 1));
-            definition = definition.slice(2000 - 1);
+    results.first(function(json){
+      console.log(json);
+      chunks.push('__**' + query + '**__\r\n');
+      var definition = json.definition;
+      if (definition.length <= 2000) {
+        chunks.push(definition);
+      } else {
+        while (definition.length >= 2000) {
+          chunks.push(definition.slice(0, 2000 - 1));
+          definition = definition.slice(2000 - 1);
+        }
+      }
+      
+      if (json.example.length > 0) {
+        chunks.push('Example: *' + json.example + '*');
+      }
+
+      var sendChunk = function(send_chunks) {
+        bot.sendMessage(message.channel, send_chunks[0], function(error){
+          if (error) {
+            console.log(error);
+            return 0;
           }
-        }
-        
-        if (json.example.length > 0) {
-          chunks.push('Example: *' + json.example + '*');
-        }
 
-        var sendChunk = function(send_chunks) {
-          bot.sendMessage(message.channel, send_chunks[0], function(error){
-            if (error) {
-              console.log(error);
-              return 0;
-            }
+          send_chunks.shift();
+          if (send_chunks.length > 0) {
+            sendChunk(send_chunks);
+          }
 
-            send_chunks.shift();
-            if (send_chunks.length > 0) {
-              sendChunk(send_chunks);
-            }
+        });
+      };
 
-          });
-        };
+      if (chunks.length > 0) {
+        sendChunk(chunks);
+      }
 
-        if (chunks.length > 0) {
-          sendChunk(chunks);
-        }
-
-      });
+    });
   }
 });
 

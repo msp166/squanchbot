@@ -35,7 +35,8 @@ By convention, most discord bots run as a single public entity that can be invit
     - [!wolfram](#wolfram)
   - [PM Commands](#pm-commands)
     - [!commands or commands](#commands-or-commands)
-    - [!delete](#delete)
+    - [!delete or delete](#delete-or-delete)
+    - [!download or download](#download-or-download)
   - [User-created Audio Commands](#user-created-audio-commands)
 - [WolframAlpha Integration](#wolframalpha-integration)
 
@@ -148,12 +149,16 @@ Queries [WolframAlpha](https://www.wolframalpha.com) and displays all results. S
 Example: ```!wolfram poisson distribution```
 
 ### PM Commands
+These commands will only work in a PM with the bot. This is intended to keep administration of audio commands out of the main channel. This reduces chat clutter and also helps users surprise other users with new audio.
 
 #### !commands or commands
 Displays a list of all commands, including user-added audio commands.
 
-#### !delete
-When given the name of an audio command, this archives the file and removes it from the list of playable audio commands.
+#### !delete or delete
+When given the name of an audio command (without the !), this archives the file and removes it from the list of playable audio commands.
+
+#### !download or download
+When given the name of an audio command (without the !), this sends the user the file requested.
 
 ### User-created Audio Commands
 
