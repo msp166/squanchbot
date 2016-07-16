@@ -20,7 +20,30 @@ squanches = squanches.map((item) => {
   var command = '!' + filename.replace(extension, '').toLowerCase();
 
   return {filename: filename, extension: extension, command: command};
+}).filter((item) => {
+  if (item.extension == '.wav' || item.extension == '.ogg' || item.extension == '.mp3') {
+    return true;
+  } else {
+    return false;
+  }
 });
+
+console.log(squanches);
+
+squanches.forEach(function(item, index, array) {
+  var json_file = item.filename.replace(item.extension, '.json');
+  try {
+    fs.accessSync('res/' + json_file, fs.constants.R_OK);
+    var data = JSON.parse(fs.readFileSync('res/' + json_file, 'utf8'));
+    item = Object.assign(item, data);
+    array[index] = item;
+  } catch (error) {
+    //do nothing, this is fine. This is just a very anti-synchronous implementation of checking file access. 
+    //We are using synchronous here because this is loading initial config state
+  }
+});
+
+console.log(squanches);
 
 
 var global_audio_connection = null;
