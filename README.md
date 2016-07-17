@@ -35,9 +35,13 @@ By convention, most discord bots run as a single public entity that can be invit
     - [!ud](#ud)
     - [!wolfram](#wolfram)
   - [PM Commands](#pm-commands)
-    - [!commands or commands](#commands-or-commands)
-    - [!delete or delete](#delete-or-delete)
-    - [!download or download](#download-or-download)
+    - [!command <command name>](#command-command-name)
+    - [!commands](#commands-1)
+    - [!delete <command name>](#delete-command-name)
+    - [!download <command name>](#download-command-name)
+    - [!tag add <command name> <tag>](#tag-add-command-name-tag)
+    - [!tag list <command name>](#tag-list-command-name)
+    - [!tag remove <command name> <tag>](#tag-remove-command-name-tag)
   - [User-created Audio Commands](#user-created-audio-commands)
 - [WolframAlpha Integration](#wolframalpha-integration)
 
@@ -166,11 +170,14 @@ When given the name of an audio command (without the !), this archives the file 
 #### !download <command name>
 When given the name of an audio command (without the !), this sends the user the file requested.
 
+#### !tag add <command name> <tag>
+Adds the specified tag to the command. Tags must be added one at a time and can contain spaces. Everything after the command name will be treated as the tag.
+
 #### !tag list <command name>
 Displays all the tags for the supplied audio command. Tags are added to audio commands to help search and administer the list.
 
-#### !tag add <command name> <tag>
-Adds the specific tag to the command. Tags must be added one at a time and can contain spaces. Everything after the command name will be treated as the tag.
+#### !tag remove <command name> <tag>
+Removes the specified tag from the command. Tags must be removed one at a time and may contain spaces. Everything after the command name will be treated as the tag.
 
 ### User-created Audio Commands
 
