@@ -189,9 +189,6 @@ bot.on('message', function(message) {
         return false;
       }
 
-      console.log('command_to_check', command_to_check);
-      console.log('tag_to_add', tag_to_add);
-
       var commands = squanches.map((item) => {
         return item.command.toLowerCase();
       });
@@ -211,6 +208,46 @@ bot.on('message', function(message) {
           bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
         } else {
           bot.reply(message, 'The command already has that squanch loving tag!');
+        }
+        
+      } else {
+        bot.reply(message, 'I don\'t know what command you\'re asking about, squanchcake.');
+      }
+    } else if (message.content.startsWith('!tag remove') || message.content.startsWith('tag remove')) {
+      var command_and_tag = '!' + message.content.replace(/!tag remove /, '').replace(/tag remove /, '');
+      command_and_tag = command_and_tag.split(' ');
+      var command_to_check = command_and_tag.shift();
+      var tag_to_remove = command_and_tag.join(' ');
+
+      if (command_to_check == null || command_to_check == '' || command_to_check == undefined) {
+        bot.reply(message, 'I\'m not sure what command you what to squanch the tags on.');
+        return false;
+      }
+
+      if (tag_to_remove == null || tag_to_remove == '' || tag_to_remove == ' ' || tag_to_remove == undefined) {
+        bot.reply(message, 'You didn\'t give me any tags to remove, you sad squanch, you.');
+        return false;
+      }
+
+      var commands = squanches.map((item) => {
+        return item.command.toLowerCase();
+      });
+      if (commands.indexOf(command_to_check) != -1) {
+        var tags = squanches[commands.indexOf(command_to_check)].tags;
+
+        if (tags.indexOf(tag_to_remove) == -1) {
+          bot.reply(message, 'The command doesn\'t have that squanching tag!');
+        } else {
+          tags.splice(tags.indexOf(tag_to_remove), 1);
+          squanches[commands.indexOf(command_to_check)].tags = tags;
+          var filename = squanches[commands.indexOf(command_to_check)].filename;
+          var extension = squanches[commands.indexOf(command_to_check)].extension;
+          fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
+            if (error) {
+              bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+            }
+          });
+          bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
         }
         
       } else {
