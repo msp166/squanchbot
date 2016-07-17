@@ -158,22 +158,22 @@ These commands will only work in a PM with the bot. This is intended to keep adm
 
 All of the PM commands can be sent to the bot with our without the proceeding '!'. For example, 'delete airhorn' is equivalent to '!delete airhorn'.
 
-#### !command <command name>
+#### !command \<command name\>
 Displays the raw file and tag data for a given audio command.
 
 #### !commands
 Displays a list of all commands, including user-added audio commands.
 
-#### !delete <command name>
+#### !delete \<command name\>
 When given the name of an audio command (without the !), this archives the file and removes it from the list of playable audio commands.
 
-#### !download <command name>
+#### !download \<command name\>
 When given the name of an audio command (without the !), this sends the user the file requested.
 
-#### !tag add <command name> <tag>
+#### !tag add \<command name\> \<tag\>
 Adds the specified tag to the command. Tags must be added one at a time and can contain spaces. Everything after the command name will be treated as the tag.
 
-#### !tag list <command name>
+#### !tag list \<command name\>
 Displays all the tags for the supplied audio command. Tags are added to audio commands to help search and administer the list.
 
 #### !tag remove <command name> <tag>
