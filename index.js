@@ -57,6 +57,7 @@ bot.on('message', function(message) {
   if (message.channel.name === undefined) {
     if (message.attachments.length > 0 && message.author.username != bot.user.username) {
       var filename = message.attachments[0].filename;
+      filename = filename.replace(/ /g, '_');
       var url = message.attachments[0].url;
       var extension = filename.substring(filename.lastIndexOf('.'));
       var command = '!' + filename.replace(extension, '').toLowerCase();
@@ -171,6 +172,49 @@ bot.on('message', function(message) {
         }
       } else {
         bot.reply(message, 'I don\'t know what command you\'re asking about.');
+      }
+    }  else if (message.content.startsWith('!tag add') || message.content.startsWith('tag add')) {
+      var command_and_tag = '!' + message.content.replace(/!tag add /, '').replace(/tag add /, '');
+      command_and_tag = command_and_tag.split(' ');
+      var command_to_check = command_and_tag.shift();
+      var tag_to_add = command_and_tag.join(' ');
+
+      if (command_to_check == null || command_to_check == '' || command_to_check == undefined) {
+        bot.reply(message, 'I\'m not sure what command you what to squanch the tags on.');
+        return false;
+      }
+
+      if (tag_to_add == null || tag_to_add == '' || tag_to_add == ' ' || tag_to_add == undefined) {
+        bot.reply(message, 'You didn\'t give me any tags to add, you sad squanch, you.');
+        return false;
+      }
+
+      console.log('command_to_check', command_to_check);
+      console.log('tag_to_add', tag_to_add);
+
+      var commands = squanches.map((item) => {
+        return item.command.toLowerCase();
+      });
+      if (commands.indexOf(command_to_check) != -1) {
+        var tags = squanches[commands.indexOf(command_to_check)].tags;
+
+        if (tags.indexOf(tag_to_add) == -1) {
+          tags.push(tag_to_add);
+          squanches[commands.indexOf(command_to_check)].tags = tags;
+          var filename = squanches[commands.indexOf(command_to_check)].filename;
+          var extension = squanches[commands.indexOf(command_to_check)].extension;
+          fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
+            if (error) {
+              bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+            }
+          });
+          bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
+        } else {
+          bot.reply(message, 'The command already has that squanch loving tag!');
+        }
+        
+      } else {
+        bot.reply(message, 'I don\'t know what command you\'re asking about, squanchcake.');
       }
     } else if (message.author.username != bot.user.username) { //This should always be last
       bot.reply(message, 'I\'ve never even heard of that command.');
