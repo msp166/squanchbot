@@ -60,12 +60,33 @@ bot.on('message', function(message) {
       var url = message.attachments[0].url;
       var extension = filename.substring(filename.lastIndexOf('.'));
       var command = '!' + filename.replace(extension, '').toLowerCase();
+      
+      var tags = message.content;
+      if (tags) {
+        if (tags.indexOf(',') != -1) {
+          tags = tags.split(',');
+          tags = tags.map((item) => {
+            return item.trim();
+          });
+        } else {
+          tags = [tags];
+        }
+      } else {
+        tags = [];
+      }
+
       if (extension === '.ogg' || extension === '.wav' || extension === '.mp3') {
         if (squanches.map((item) => { return item.filename; }).indexOf(filename) == -1) {
           var file = fs.createWriteStream('res/' + filename);
           https.get(url, (res) => {
             res.pipe(file);
-            squanches.push({filename: filename, extension: extension, command: command});
+            fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
+              if (error) {
+                bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+              }
+            });
+            squanches.push({filename: filename, extension: extension, command: command, tags: tags});
+            console.log(squanches);
             bot.reply(message, 'Added ' + command);
           }).on('error', (e) => {
             bot.reply(message, e);
@@ -86,13 +107,24 @@ bot.on('message', function(message) {
 
       if (commands.indexOf(command_to_delete) != -1) {
         var audio_file = squanches[commands.indexOf(command_to_delete)].filename;
+        var extension = squanches[commands.indexOf(command_to_delete)].extension;
+        var json_file = audio_file.replace(extension, '.json');
 
-        fs.rename('res/' + audio_file, 'archive/' + audio_file + '_' + (new Date()).getTime(), (error) => {
+        var archive_time = (new Date()).getTime();
+
+        fs.rename('res/' + audio_file, 'archive/' + audio_file + '_' + archive_time, (error) => {
           if (error) {
             bot.reply(message, 'Okay mothersquancher, I tried to do that but there was an error: ' + error);
           } else {
             squanches.splice(commands.indexOf(command_to_delete), 1);
             bot.reply(message, 'I deleted ' + audio_file + ' for you, you old squanchbag.');
+
+            fs.rename('res/' + json_file, 'archive/' + json_file + '_' + archive_time, (error) => {
+              if (error) {
+                bot.reply(message, 'Okay mothersquancher, I tried to do that but there was an error getting rid of the tags: ' + error);
+              } 
+            });
+
           }
         });
       } else {
