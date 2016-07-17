@@ -7,6 +7,7 @@ By convention, most discord bots run as a single public entity that can be invit
 
 ### Feature List
 + User-created audio commands
++ Searchable tags for audio commands
 + Stop audio control
 + "Look at this photograph" meme generation
 + WolframAlpha queries
@@ -151,20 +152,33 @@ Example: ```!wolfram poisson distribution```
 ### PM Commands
 These commands will only work in a PM with the bot. This is intended to keep administration of audio commands out of the main channel. This reduces chat clutter and also helps users surprise other users with new audio.
 
-#### !commands or commands
+All of the PM commands can be sent to the bot with our without the proceeding '!'. For example, 'delete airhorn' is equivalent to '!delete airhorn'.
+
+#### !command <command name>
+Displays the raw file and tag data for a given audio command.
+
+#### !commands
 Displays a list of all commands, including user-added audio commands.
 
-#### !delete or delete
+#### !delete <command name>
 When given the name of an audio command (without the !), this archives the file and removes it from the list of playable audio commands.
 
-#### !download or download
+#### !download <command name>
 When given the name of an audio command (without the !), this sends the user the file requested.
+
+#### !tag list <command name>
+Displays all the tags for the supplied audio command. Tags are added to audio commands to help search and administer the list.
+
+#### !tag add <command name> <tag>
+Adds the specific tag to the command. Tags must be added one at a time and can contain spaces. Everything after the command name will be treated as the tag.
 
 ### User-created Audio Commands
 
 Users can create new audio commands by PMing audio files to the bot. These will then become available to all users and will cause squanchbot to connect to the requesting user's voice channel and play the file on command.
 
-The new command name will be a lowercased version of the file name without the extension. Thus, if the user uploads a file called 'YeAAaHhHh.ogg' the new command will be '!yeaaahhhh'.
+When uploading the file to the bot, initial tags for the audio can be included by typing them into the comment box. If more than one tag is desired, sepparate them with a comma. 
+
+The new command name will be a lowercased version of the file name without the extension. Thus, if the user uploads a file called 'YeAAaHhHh.ogg' the new command will be '!yeaaahhhh'. Additionally, spaces are replaced with underscores to help avoid cross platform filesystem issues.
 
 ## WolframAlpha Integration
 
