@@ -685,6 +685,30 @@ bot.on('message', function(message) {
 
     }
 
+    if (message.content.startsWith("!random")) {
+      var params = message.content.split(' ');
+      if (params.length <= 1) {
+        var voice_channel = message.author.voiceChannel;
+
+        var audio_file = squanches[Math.floor(Math.random()*squanches.length)].filename;
+
+        bot.deleteMessage(message);
+
+        bot.joinVoiceChannel(voice_channel, function(error, connection) {
+          global_audio_connection = connection;
+          console.log('res/' + audio_file);
+          connection.playFile('res/' + audio_file, 0.25, function(error, intent){
+            intent.on('end', function(){
+              setTimeout(function(){
+                connection.destroy();
+                global_audio_connection = null;
+              }, 1000);
+            });
+          });
+        });
+      }
+    }
+
   //end of channel commands
   }
 
