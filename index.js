@@ -195,6 +195,10 @@ bot.on('message', function(message) {
       if (commands.indexOf(command_to_check) != -1) {
         var tags = squanches[commands.indexOf(command_to_check)].tags;
 
+        if (tags == null) {
+          tags = [];
+        }
+
         if (tags.indexOf(tag_to_add) == -1) {
           tags.push(tag_to_add);
           squanches[commands.indexOf(command_to_check)].tags = tags;
@@ -737,20 +741,29 @@ bot.on('message', function(message) {
         var tag = params[1];
         var filtered_commands = getCommandsByTag(tag);
 
-        var audio_file = filtered_commands[Math.floor(Math.random()*filtered_commands.length)].filename;
+        if (filtered_commands.length == 0) {
+          bot.sendMessage(message.channel, 'I can\'t randomly squanch anything for that particular tag, bub', {}, function(error, sent_message){
+            setTimeout(function(){
+              bot.deleteMessage(message);
+              bot.deleteMessage(sent_message);
+            }, 5000);
+          });
+        } else {
+          var audio_file = filtered_commands[Math.floor(Math.random()*filtered_commands.length)].filename;
 
-        bot.joinVoiceChannel(voice_channel, function(error, connection) {
-          global_audio_connection = connection;
-          console.log('res/' + audio_file);
-          connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-            intent.on('end', function(){
-              setTimeout(function(){
-                connection.destroy();
-                global_audio_connection = null;
-              }, 1000);
+          bot.joinVoiceChannel(voice_channel, function(error, connection) {
+            global_audio_connection = connection;
+            console.log('res/' + audio_file);
+            connection.playFile('res/' + audio_file, 0.25, function(error, intent){
+              intent.on('end', function(){
+                setTimeout(function(){
+                  connection.destroy();
+                  global_audio_connection = null;
+                }, 1000);
+              });
             });
           });
-        });
+        }
       }
     }
 
