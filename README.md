@@ -1,5 +1,5 @@
 # squanchbot
-*Just say say what's in your squanch and people will understand* ~Rick Sanchez C-137
+*Just say what's in your squanch and people will understand* ~Rick Sanchez C-137
 
 This is a bot for [discord](https://discordapp.com) written in javascript for the [Node.js](https://nodejs.org) platform. It was created for the use of a small personal server. Its main functionality is playing user defined audio clips in voice chat, but it also has a few other functions. 
 
