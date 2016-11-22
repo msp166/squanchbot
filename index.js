@@ -307,6 +307,33 @@ bot.on('message', function(message) {
 
       bot.reply(message, reply);
 
+    } else if (message.content.startsWith('!tag search') || message.content.startsWith('tag search')) {
+      var params = message.content.split(' ');
+
+      if (params.length <= 2) {
+        bot.reply(message, 'You didn\'t give me a tag to squanch for');
+      } else {
+        params.splice(0, 2);
+        var tag = params.join(' ');
+        var filtered_commands = getCommandsByTag(tag);
+
+        if (filtered_commands.length == 0) {
+          bot.reply(message, 'I couldn\'t squanch anything for ' + tag);
+        } else {
+          filtered_commands = filtered_commands.map((item) => {
+            return item.command;
+          });
+
+          filtered_commands.sort();
+
+          var reply = 'If you wanna hear ' + tag + ', try squanching these:';
+          for (var i = 0; i < filtered_commands.length; i++) {
+            reply += "\r\n" + filtered_commands[i];
+          }
+
+          bot.reply(message, reply);
+        }
+      }
     } else if (message.author.username != bot.user.username) { //This should always be last
       bot.reply(message, 'I\'ve never even heard of that command.');
     }
@@ -685,7 +712,7 @@ bot.on('message', function(message) {
 
     }
 
-    if (message.content.startsWith("!random")) {
+    if (message.content.startsWith('!random')) {
       var params = message.content.split(' ');
       var voice_channel = message.author.voiceChannel;
       bot.deleteMessage(message);
@@ -724,6 +751,50 @@ bot.on('message', function(message) {
             });
           });
         });
+      }
+    }
+
+    if (message.content.startsWith('!tag search')) {
+      var params = message.content.split(' ');
+
+      if (params.length <= 2) {
+        bot.sendMessage(message.channel, 'You didn\'t give me a tag to squanch for', {}, function(error, sent_message){
+          setTimeout(function(){
+            bot.deleteMessage(message);
+            bot.deleteMessage(sent_message);
+          }, 5000);
+        });
+      } else {
+        params.splice(0, 2);
+        var tag = params.join(' ');
+        var filtered_commands = getCommandsByTag(tag);
+
+        if (filtered_commands.length == 0) {
+          bot.sendMessage(message.channel, 'I couldn\'t squanch anything for ' + tag, {}, function(error, sent_message){
+            setTimeout(function(){
+              bot.deleteMessage(message);
+              bot.deleteMessage(sent_message);
+            }, 5000);
+          });
+        } else {
+          filtered_commands = filtered_commands.map((item) => {
+            return item.command;
+          });
+
+          filtered_commands.sort();
+
+          var reply = 'If you wanna hear ' + tag + ', try squanching these:';
+          for (var i = 0; i < filtered_commands.length; i++) {
+            reply += "\r\n" + filtered_commands[i];
+          }
+
+          bot.sendMessage(message.channel, reply, {}, function(error, sent_message){
+            setTimeout(function(){
+              bot.deleteMessage(message);
+              bot.deleteMessage(sent_message);
+            }, 5000);
+          });
+        }
       }
     }
 
