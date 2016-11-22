@@ -27,11 +27,15 @@ By convention, most discord bots run as a single public entity that can be invit
   - [Adding to a Discord server](#adding-to-a-discord-server)
 - [Usage](#usage)
   - [Channel Commands](#channel-commands)
+    - [!alltags](#alltags)
     - [!commands](#commands)
     - [!photograph](#photograph)
     - [!ping](#ping)
+    - [!random \<optional tag\>](#random-%5Coptional-tag%5C)
     - [!rule34](#rule34)
     - [!stop](#stop)
+    - [!tags](#tags)
+    - [!tag search \<tag\>](#tag-search-%5Ctag%5C)
     - [!ud](#ud)
     - [!wolfram](#wolfram)
   - [PM Commands](#pm-commands)
@@ -130,6 +134,9 @@ Squnachbot listens for a number of commands in the server's text channel, each o
 
 ### Channel Commands
 
+#### !alltags
+Lists all known tags and their usage count.
+
 #### !commands
 Displays a list of all commands, including user-added audio commands. Message dissapears after 10 seconds to avoid channel clutter.
 
@@ -140,11 +147,20 @@ Example: ```!photograph http://website.com/funnypic.jpg```
 #### !ping
 Responds with a rude "pong" type message.
 
+#### !random \<optional tag\>
+Plays a random audio command. If given a tag, plays a random command which is tagged.
+
 #### !rule34
 If it exists...
 
 #### !stop
 Stops all currently playing audio.
+
+#### !tags
+Lists the top 25 used tags.
+
+#### !tag search \<tag\>
+Searches for commands with the given tag.
 
 #### !ud
 Looks up a word on [Urban Dictionary](http://www.urbandictionary.com) and returns the first result
