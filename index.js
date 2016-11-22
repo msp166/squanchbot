@@ -253,6 +253,60 @@ bot.on('message', function(message) {
       } else {
         bot.reply(message, 'I don\'t know what command you\'re asking about, squanchcake.');
       }
+    } else if (message.content.startsWith('!tags') || message.content.startsWith('tags')) {
+      var all_tags = [];
+      for (var i = 0; i < squanches.length; i++) {
+        if (squanches[i].hasOwnProperty('tags')) {
+          var tags = squanches[i].tags;
+          for (var j = 0; j < tags.length; j++) {
+            var tag = tags[j];
+            if (all_tags.map((item) => { return item.tag; }).indexOf(tag) == -1) {
+              all_tags.push({tag: tag, count: 1});
+            } else {
+              all_tags[all_tags.map((item) => { return item.tag; }).indexOf(tag)].count += 1;
+            }
+          }
+        }
+      }
+
+      all_tags.sort((a, b) => {
+        return a.count - b.count;
+      });
+
+      var reply = "Here are the top 25 tags in the squanch list:";
+      for (var i = 0; i < all_tags.length && i < 24; i++) {
+        reply += "\r\n#" + (i + 1) + " - " + all_tags[i].tag + " - count: " + all_tags[i].count;
+      }
+
+      bot.reply(message, reply);
+
+    } else if (message.content.startsWith('!alltags') || message.content.startsWith('alltags')) {
+      var all_tags = [];
+      for (var i = 0; i < squanches.length; i++) {
+        if (squanches[i].hasOwnProperty('tags')) {
+          var tags = squanches[i].tags;
+          for (var j = 0; j < tags.length; j++) {
+            var tag = tags[j];
+            if (all_tags.map((item) => { return item.tag; }).indexOf(tag) == -1) {
+              all_tags.push({tag: tag, count: 1});
+            } else {
+              all_tags[all_tags.map((item) => { return item.tag; }).indexOf(tag)].count += 1;
+            }
+          }
+        }
+      }
+
+      all_tags.sort((a, b) => {
+        return a.tag - b.tag;
+      });
+
+      var reply = "Here are the top 25 tags in the squanch list:";
+      for (var i = 0; i < all_tags.length && i < 24; i++) {
+        reply += "\r\n" + all_tags[i].tag + " - count: " + all_tags[i].count;
+      }
+
+      bot.reply(message, reply);
+
     } else if (message.author.username != bot.user.username) { //This should always be last
       bot.reply(message, 'I\'ve never even heard of that command.');
     }
@@ -574,6 +628,64 @@ bot.on('message', function(message) {
       //   });
     }
 
+    if (message.content.startsWith('!tags')) {
+      var all_tags = [];
+      for (var i = 0; i < squanches.length; i++) {
+        if (squanches[i].hasOwnProperty('tags')) {
+          var tags = squanches[i].tags;
+          for (var j = 0; j < tags.length; j++) {
+            var tag = tags[j];
+            if (all_tags.map((item) => { return item.tag; }).indexOf(tag) == -1) {
+              all_tags.push({tag: tag, count: 1});
+            } else {
+              all_tags[all_tags.map((item) => { return item.tag; }).indexOf(tag)].count += 1;
+            }
+          }
+        }
+      }
+
+      all_tags.sort((a, b) => {
+        return a.count - b.count;
+      });
+
+      var reply = "Here are the top 25 tags in the squanch list:";
+      for (var i = 0; i < all_tags.length && i < 24; i++) {
+        reply += "\r\n#" + (i + 1) + " - " + all_tags[i].tag + " - count: " + all_tags[i].count;
+      }
+
+      bot.sendMessage(message.channel, reply);
+    }
+
+    if (message.content.startsWith('!alltags')) {
+      var all_tags = [];
+      for (var i = 0; i < squanches.length; i++) {
+        if (squanches[i].hasOwnProperty('tags')) {
+          var tags = squanches[i].tags;
+          for (var j = 0; j < tags.length; j++) {
+            var tag = tags[j];
+            if (all_tags.map((item) => { return item.tag; }).indexOf(tag) == -1) {
+              all_tags.push({tag: tag, count: 1});
+            } else {
+              all_tags[all_tags.map((item) => { return item.tag; }).indexOf(tag)].count += 1;
+            }
+          }
+        }
+      }
+
+      all_tags.sort((a, b) => {
+        return a.tag - b.tag;
+      });
+
+      var reply = "Here are all the tags in the squanch list:";
+      for (var i = 0; i < all_tags.length; i++) {
+        reply += "\r\n" + all_tags[i].tag + " - count: " + all_tags[i].count;
+      }
+
+       bot.sendMessage(message.channel, reply);
+
+    }
+
+  //end of channel commands
   }
 
   if (message.content === 'ping') {
