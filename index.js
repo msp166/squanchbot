@@ -403,55 +403,16 @@ bot.on('message', function(message) {
                 }
               }
 
-              bot.sendMessage(message.channel, return_string);
-              // console.log(return_string);
+              message.channel.sendMessage(return_string);
 
               for (var k = 0; k < images.length; k++) {
-                bot.sendFile(message.channel, images[k], uuid.v4()+'.jpg');
+                message.channel.sendFile(images[k], uuid.v4()+'.jpg');
               }
 
-              // var getImage = function(image_list) {
-              //   var image = 'tmp/' + uuid.v4() + '.gif';
-              //   var file = fs.createWriteStream(image_list[0]);
-              //   console.log(image_list[0]);
-              //   http.get(image_list[0], (res) => {
-              //     res.pipe(file);
-              //     image_list.shift();
-              //     console.log('got image');
-              //     getImage(image_list);
-              //     // bot.sendFile(message.channel, image, function(error){
-              //     //   fs.unlink(image, (error) => {
-              //     //     if (error) throw error;
-              //     //   });
-              //     // });
-              //   }).on('error', (error) => {
-              //     throw error;
-              //   });
-              // };
-
-              // if (images.length > 0) {
-              //   getImage(images);
-              // }
-              
-              // for (var k = 0; k < images.length; k++) {
-              //   var image = 'tmp/' + uuid.v4() + '.gif';
-              //   var file = fs.createWriteStream(image);
-              //   console.log(images[k]);
-              //   http.get(images[k], (res) => {
-              //     res.pipe(file);
-              //     // bot.sendFile(message.channel, image, function(error){
-              //     //   fs.unlink(image, (error) => {
-              //     //     if (error) throw error;
-              //     //   });
-              //     // });
-              //   }).on('error', (error) => {
-              //     throw error;
-              //   });
-              // }
             }
 
             if (result.length == 0) {
-              bot.reply(message, 'Wolfram can\'t squanch that');
+              message.reply('Wolfram can\'t squanch that');
             }
           });
         } catch (error) {
