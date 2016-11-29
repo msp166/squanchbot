@@ -358,10 +358,12 @@ bot.on('message', function(message) {
 
       voice_channel.join()
         .then(connection => {
+          console.log('res/' + audio_file);
           global_audio_connection = connection;
           var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
           dispatcher.once('end', () => {
             connection.disconnect();
+            global_audio_connection = null;
           });
         })
         .catch(console.error);
@@ -609,51 +611,67 @@ bot.on('message', function(message) {
 
     if (message.content.startsWith('!random')) {
       var params = message.content.split(' ');
-      var voice_channel = message.author.voiceChannel;
-      bot.deleteMessage(message);
+      var voice_channel = message.member.voiceChannel;
+      message.delete();
 
       if (params.length <= 1) {
 
         var audio_file = squanches[Math.floor(Math.random()*squanches.length)].filename;
 
-        bot.joinVoiceChannel(voice_channel, function(error, connection) {
-          global_audio_connection = connection;
+        voice_channel.join()
+        .then(connection => {
           console.log('res/' + audio_file);
-          connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-            intent.on('end', function(){
-              setTimeout(function(){
-                connection.destroy();
-                global_audio_connection = null;
-              }, 1000);
-            });
+          global_audio_connection = connection;
+          var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+          dispatcher.once('end', () => {
+            connection.disconnect();
+            global_audio_connection = null;
           });
-        });
+        })
+        .catch(console.error);
       } else {
         var tag = params[1];
         var filtered_commands = getCommandsByTag(tag);
 
         if (filtered_commands.length == 0) {
-          bot.sendMessage(message.channel, 'I can\'t randomly squanch anything for that particular tag, bub', {}, function(error, sent_message){
-            setTimeout(function(){
-              bot.deleteMessage(message);
-              bot.deleteMessage(sent_message);
-            }, 5000);
-          });
+        //   bot.sendMessage(message.channel, 'I can\'t randomly squanch anything for that particular tag, bub', {}, function(error, sent_message){
+        //     setTimeout(function(){
+        //       bot.deleteMessage(message);
+        //       bot.deleteMessage(sent_message);
+        //     }, 5000);
+        //   });
+          message.channel.sendMessage('I can\'t randomly squanch anything for that particular tag, bub')
+            .then(sent_message => {
+              message.delete(5000);
+              sent_message.delete(5000);
+            })
+            .catch(console.error);
         } else {
           var audio_file = filtered_commands[Math.floor(Math.random()*filtered_commands.length)].filename;
 
-          bot.joinVoiceChannel(voice_channel, function(error, connection) {
-            global_audio_connection = connection;
+          // bot.joinVoiceChannel(voice_channel, function(error, connection) {
+          //   global_audio_connection = connection;
+          //   console.log('res/' + audio_file);
+          //   connection.playFile('res/' + audio_file, 0.25, function(error, intent){
+          //     intent.on('end', function(){
+          //       setTimeout(function(){
+          //         connection.destroy();
+          //         global_audio_connection = null;
+          //       }, 1000);
+          //     });
+          //   });
+          // });
+          voice_channel.join()
+          .then(connection => {
             console.log('res/' + audio_file);
-            connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-              intent.on('end', function(){
-                setTimeout(function(){
-                  connection.destroy();
-                  global_audio_connection = null;
-                }, 1000);
-              });
+            global_audio_connection = connection;
+            var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+            dispatcher.once('end', () => {
+              connection.disconnect();
+              global_audio_connection = null;
             });
-          });
+          })
+          .catch(console.error);
         }
       }
     }
