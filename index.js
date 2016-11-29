@@ -575,7 +575,7 @@ bot.on('message', function(message) {
         reply += "\r\n#" + (i + 1) + " - " + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-      bot.sendMessage(message.channel, reply);
+      message.channel.sendMessage(reply);
     }
 
     if (message.content.startsWith('!alltags')) {
@@ -603,7 +603,7 @@ bot.on('message', function(message) {
         reply += "\r\n" + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-       bot.sendMessage(message.channel, reply);
+       message.channel.sendMessage(reply);
 
     }
 
