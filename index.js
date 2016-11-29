@@ -426,12 +426,12 @@ bot.on('message', function(message) {
 
       var image_uuid = uuid.v4();
 
-      bot.deleteMessage(message);
+      message.delete();
 
       request(image, {encoding: 'binary'}, function(error, response, body){
         if (error) {
           console.log(error);
-          bot.sendMessage(message.channel, 'I\'m sorry to have to tell you this, but the server you wanted me to go to is completely squanched');
+          message.channel.sendMessage('I\'m sorry to have to tell you this, but the server you wanted me to go to is completely squanched');
           return 0;
         }
 
@@ -458,7 +458,7 @@ bot.on('message', function(message) {
               extension = ".png";
               break;
             default:
-              bot.sendMessage(message.channel, 'I don\t know what you\'re trying to pull here buddy but that ain\'t no squanching image');
+              message.channel.sendMessage('I don\t know what you\'re trying to pull here buddy but that ain\'t no squanching image');
               return false;
               break;
           }
@@ -472,7 +472,7 @@ bot.on('message', function(message) {
           fs.writeFile(image_file, body, 'binary', function(error){
             if (error) {
               console.log(error);
-              bot.sendMessage(message.channel, 'Sorry bud, I couldn\'t squanch that image');
+              message.channel.sendMessage('Sorry bud, I couldn\'t squanch that image');
               return 0;
             }
 
@@ -482,7 +482,7 @@ bot.on('message', function(message) {
             im.identify(image_file, function(error, features){
               if (error) {
                 console.log(error);
-                bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                 return 0;
               }
               console.log(features);
@@ -499,38 +499,33 @@ bot.on('message', function(message) {
               var after_resize = function(error, stdout) {
                 if (error) {
                   console.log(error);
-                  bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                  message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                   return 0;
                 }
                 console.log('stdout: ' + stdout);
-                // bot.sendFile(message.channel, resize_image_file);
 
                 im.convert([resize_image_file, '-background', 'None', '-rotate', rotation_angle, rotate_image_file], function(error, stdout){
                   if (error) {
                     console.log(error);
-                    bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                    message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                     return 0;
                   }
-
-                  // bot.sendFile(message.channel, rotate_image_file);
 
                   im.convert([background_image, rotate_image_file, '-geometry', '+725+300', '-composite', composite_image_file], function(error, stdout){
                     if (error) {
                       console.log(error);
-                      bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                      message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                       return 0;
                     }
-
-                    // bot.sendFile(message.channel, composite_image_file);
 
                     im.convert([composite_image_file, foreground_image, '-composite', final_image_file], function(error, stdout){
                       if (error) {
                         console.log(error);
-                        bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                        message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                         return 0;
                       }
 
-                      bot.sendFile(message.channel, final_image_file);
+                      message.channel.sendFile(final_image_file);
                     });
 
                   });
@@ -549,72 +544,10 @@ bot.on('message', function(message) {
           });
 
         } else {
-          bot.sendMessage(message.channel, 'Sorry bud, I couldn\'t squanch that image');
+          message.channel.sendMessage('Sorry bud, I couldn\'t squanch that image');
         }
 
       });
-
-      // request
-      //   .get(image)
-      //   .on('response', (response) => {
-      //     console.log(response.headers);
-      //     console.log(response.statusCode);
-      //     console.log(response.statusMessage);
-
-      //     if (response.statusCode === 200) {
-      //       var image_file = 'tmp/' + image_uuid;
-
-      //       switch (response.headers['content-type']) {
-      //         case 'image/gif':
-      //           image_file += '.gif';
-      //           break;
-      //         case 'image/jpeg':
-      //           image_file += '.jpg';
-      //           break;
-      //         case 'image/png':
-      //           image_file += '.png';
-      //           break;
-      //         default:
-      //           bot.sendMessage(message.channel, 'I don\t know what you\'re trying to pull here buddy but that ain\'t no squanching image');
-      //           return false;
-      //           break;
-      //       }
-
-      //       var ws = fs.createWriteStream(image_file);
-
-      //       response.pipe(ws, function(error){
-      //         if (error) console.log(error);
-      //         bot.sendMessage(message.channel, 'got the image: ' + image_file);
-
-      //         im.identify(image_file, function(error, features){
-      //           if (error) console.log(error);
-      //           console.log(features);
-
-      //           // var target_width = 355;
-      //           // var target_height = 252;
-      //           // var quality = 80;
-      //           // var rotation_angle = -14.33;
-      //           // var background_image = 'lookatthisphotograph_base.png';
-      //           // var foreground_image = 'lookatthisphotograph_over.png';
-
-      //           // im.convert([image_file, '-resize', target_width + 'x' + target_height, '-gravity', 'center', '-crop', target_width + 'x' + target_height + '0+0', '+repage', image_file + '_resize'], function(error, stdout){
-      //           //   if (error) console.log(error);
-      //           //   console.log('stdout: ' + stdout);
-      //           //   bot.sendFile(message.channel, image_file + '_resize');
-      //           // });
-
-
-      //         });
-      //       });
-
-      //     } else {
-      //       bot.sendMessage(message.channel, 'Sorry bud, I couldn\'t squanch that image');
-      //     }
-      //   })
-      //   .on('error', (error) => {
-      //     console.log(error);
-      //     bot.sendMessage(message.channel, 'I\'m sorry to have to tell you this, but the server you wanted me to go to is completely squanched');
-      //   });
     }
 
     if (message.content.startsWith('!tags')) {
