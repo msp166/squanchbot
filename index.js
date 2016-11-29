@@ -350,33 +350,30 @@ bot.on('message', function(message) {
     });
 
     if (commands.indexOf(audio_command) != -1) {
-      var voice_channel = message.author.voiceChannel;
+      var voice_channel = message.member.voiceChannel;
 
       var audio_file = squanches[commands.indexOf(audio_command)].filename;
 
-      bot.deleteMessage(message);
+      message.delete();
 
-      bot.joinVoiceChannel(voice_channel, function(error, connection) {
-        global_audio_connection = connection;
-        console.log('res/' + audio_file);
-        connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-          intent.on('end', function(){
-            setTimeout(function(){
-              connection.destroy();
-              global_audio_connection = null;
-            }, 1000);
+      voice_channel.join()
+        .then(connection => {
+          global_audio_connection = connection;
+          var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+          dispatcher.once('end', () => {
+            connection.disconnect();
           });
-        });
-      });
+        })
+        .catch(console.error);
     }
 
     if (message.content === '!commands' || message.content === '!help') {
-      bot.sendMessage(message.channel, getCommands(), {}, function(error, sent_message){
-        setTimeout(function(){
-          bot.deleteMessage(message);
-          bot.deleteMessage(sent_message);
-        }, 10000);
-      });
+      message.channel.sendMessage(getCommands())
+        .then(sent_message => {
+          message.delete(10000);
+          sent_message.delete(10000);
+        })
+        .catch(console.error);
     }
 
     if (message.content.startsWith('!wolfram ')) {
@@ -913,7 +910,7 @@ bot.on('ready', function() {
 bot.on('disconnected', function(){
   console.log('Squanchbot reconnecting...');
   if (config.get('bot.token') != null) {
-    bot.loginWithToken(config.get('bot.token'), (error, token) => {
+    bot.login(config.get('bot.token'), (error, token) => {
       if (error) {
         console.log(error);
       } else {
@@ -924,11 +921,13 @@ bot.on('disconnected', function(){
 });
 
 if (config.get('bot.token') != null) {
-  bot.loginWithToken(config.get('bot.token'), (error, token) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Squanchbot connected');
-    }
-  });
+  bot.login(config.get('bot.token'));
 }
+
+bot.on('ready', () => {
+  console.log("Squanchbot connected");
+});
+
+bot.on('error', e => {
+  console.error(e);
+});
