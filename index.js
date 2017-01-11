@@ -139,10 +139,10 @@ bot.on('message', function(message) {
       if (commands.indexOf(command_to_download) != -1) {
         var audio_file = squanches[commands.indexOf(command_to_download)].filename;
 
-        bot.sendFile(message.channel, 'res/' + audio_file, audio_file);
+        message.channel.sendFile('res/' + audio_file, audio_file);
 
       } else {
-        bot.reply(message, 'You can go download a sack of squanch, I don\' have any command or file like that.');
+        message.reply('You can go download a sack of squanch, I don\' have any command or file like that.');
       }
     } else if (message.content.startsWith('!command') || message.content.startsWith('command')) {
       var command_to_check = '!' + message.content.replace(/!command /, '').replace(/command /, '');
@@ -341,7 +341,7 @@ bot.on('message', function(message) {
     } else if (message.author.username != bot.user.username) { //This should always be last
       message.reply('I\'ve never even heard of that command.');
     }
-  } else {
+  } else { // PM commands above - Channel commands below
 
     var audio_command = message.content.toLowerCase();
 
