@@ -180,12 +180,12 @@ bot.on('message', function(message) {
       var tag_to_add = command_and_tag.join(' ');
 
       if (command_to_check == null || command_to_check == '' || command_to_check == undefined) {
-        bot.reply(message, 'I\'m not sure what command you what to squanch the tags on.');
+        message.reply('I\'m not sure what command you what to squanch the tags on.');
         return false;
       }
 
       if (tag_to_add == null || tag_to_add == '' || tag_to_add == ' ' || tag_to_add == undefined) {
-        bot.reply(message, 'You didn\'t give me any tags to add, you sad squanch, you.');
+        message.reply('You didn\'t give me any tags to add, you sad squanch, you.');
         return false;
       }
 
@@ -206,16 +206,16 @@ bot.on('message', function(message) {
           var extension = squanches[commands.indexOf(command_to_check)].extension;
           fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
             if (error) {
-              bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+              message.reply('Had some kind of error saving your tags: ' + JSON.stringify(error));
             }
           });
-          bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
+          message.reply(JSON.stringify(squanches[commands.indexOf(command_to_check)]));
         } else {
-          bot.reply(message, 'The command already has that squanch loving tag!');
+          message.reply('The command already has that squanch loving tag!');
         }
         
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about, squanchcake.');
+        message.reply('I don\'t know what command you\'re asking about, squanchcake.');
       }
     } else if (message.content.startsWith('!tag remove') || message.content.startsWith('tag remove')) {
       var command_and_tag = '!' + message.content.replace(/!tag remove /, '').replace(/tag remove /, '');
