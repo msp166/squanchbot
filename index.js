@@ -478,9 +478,6 @@ bot.on('message', function(message) {
               return 0;
             }
 
-            // bot.sendMessage(message.channel, 'got the image: ' + image_file);
-            // bot.sendFile(message.channel, image_file);
-
             im.identify(image_file, function(error, features){
               if (error) {
                 console.log(error);
