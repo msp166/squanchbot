@@ -716,8 +716,9 @@ bot.on('message', function(message) {
 
   if (message.content === '!stop') {
     if (global_audio_connection != null) {
-      global_audio_connection.stopPlaying();
+      global_audio_connection.player.dispatcher.end();
     }
+    message.delete(5000);
   }
 
   if (message.content === '!rule34') {
