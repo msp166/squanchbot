@@ -705,7 +705,7 @@ bot.on('message', function(message) {
   //end of channel commands
   }
 
-  if (message.content === 'ping') {
+  if (message.content === '!ping') {
     message.channel.sendMessage('Oh what, like I\'m supposed to squanch around waiting to say \'pong\' for you?')
       .then(sent_message => {
         message.delete(5000);
