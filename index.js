@@ -162,16 +162,16 @@ bot.on('message', function(message) {
       if (commands.indexOf(command_to_check) != -1) {
         var tags = squanches[commands.indexOf(command_to_check)].tags;
         if (tags.length == 0) {
-          bot.reply(message, 'No tags on this one yet');
+          message.reply('No tags on this one yet');
         } else {
           var reply = 'Tags for ' + squanches[commands.indexOf(command_to_check)].command + ":";
           for (var i = 0; i < tags.length; i++) {
             reply += "\r\n" + tags[i];
           }
-          bot.reply(message, reply);
+          message.reply(reply);
         }
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about.');
+        message.reply('I don\'t know what command you\'re asking about.');
       }
     }  else if (message.content.startsWith('!tag add') || message.content.startsWith('tag add')) {
       var command_and_tag = '!' + message.content.replace(/!tag add /, '').replace(/tag add /, '');
