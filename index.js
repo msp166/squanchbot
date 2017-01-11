@@ -150,9 +150,9 @@ bot.on('message', function(message) {
         return item.command.toLowerCase();
       });
       if (commands.indexOf(command_to_check) != -1) {
-        bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
+        message.reply(JSON.stringify(squanches[commands.indexOf(command_to_check)]));
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about.');
+        message.reply('I don\'t know what command you\'re asking about.');
       }
     } else if (message.content.startsWith('!tag list') || message.content.startsWith('tag list')) {
       var command_to_check = '!' + message.content.replace(/!tag list /, '').replace(/tag list /, '');
