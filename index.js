@@ -706,7 +706,12 @@ bot.on('message', function(message) {
   }
 
   if (message.content === 'ping') {
-    bot.sendMessage(message.channel, "Oh what, like I'm supposed to squanch around waiting to say 'pong' for you?");
+    message.channel.sendMessage('Oh what, like I\'m supposed to squanch around waiting to say \'pong\' for you?')
+      .then(sent_message => {
+        message.delete(5000);
+              sent_message.delete(5000);
+      })
+      .catch(console.error);
   }
 
   if (message.content === '!stop') {
