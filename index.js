@@ -55,10 +55,10 @@ var bot = new Discord.Client();
 bot.on('message', function(message) {
 
   if (message.channel.name === undefined) {
-    if (message.attachments.length > 0 && message.author.username != bot.user.username) {
-      var filename = message.attachments[0].filename;
+    if (message.attachments.array().length > 0 && message.author.username != bot.user.username) {
+      var filename = message.attachments.array()[0].filename;
       filename = filename.replace(/ /g, '_');
-      var url = message.attachments[0].url;
+      var url = message.attachments.array()[0].url;
       var extension = filename.substring(filename.lastIndexOf('.'));
       var command = '!' + filename.replace(extension, '').toLowerCase();
       
@@ -83,23 +83,23 @@ bot.on('message', function(message) {
             res.pipe(file);
             fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
               if (error) {
-                bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+                message.reply('Had some kind of error saving your tags: ' + JSON.stringify(error));
               }
             });
             squanches.push({filename: filename, extension: extension, command: command, tags: tags});
             console.log(squanches);
-            bot.reply(message, 'Added ' + command);
+            message.reply('Added ' + command);
           }).on('error', (e) => {
-            bot.reply(message, e);
+            message.reply(e);
           });
         } else {
-          bot.reply(message, 'Okay, well, I\'ve already got a file with that name so go squanch yourself!');
+          message.reply('Okay, well, I\'ve already got a file with that name so go squanch yourself!');
         }
       } else {
-        bot.reply(message, 'Come on dude, that\'s not even an audio squanch. I can only do .ogg, .mp3 or .wav');
+        message.reply('Come on dude, that\'s not even an audio squanch. I can only do .ogg, .mp3 or .wav');
       }
     } else if (message.content === '!commands' || message.content == 'commands' || message.content === '!help' || message.content === 'help') {
-      bot.reply(message, getCommands());
+      message.reply(getCommands());
     } else if (message.content.startsWith('!delete ') || message.content.startsWith('delete ')) {
       var command_to_delete = '!' + message.content.replace(/!delete /, '').replace(/delete /, '');
       var commands = squanches.map((item) => {
@@ -115,21 +115,21 @@ bot.on('message', function(message) {
 
         fs.rename('res/' + audio_file, 'archive/' + audio_file + '_' + archive_time, (error) => {
           if (error) {
-            bot.reply(message, 'Okay mothersquancher, I tried to do that but there was an error: ' + error);
+            message.reply('Okay mothersquancher, I tried to do that but there was an error: ' + error);
           } else {
             squanches.splice(commands.indexOf(command_to_delete), 1);
-            bot.reply(message, 'I deleted ' + audio_file + ' for you, you old squanchbag.');
+            message.reply('I deleted ' + audio_file + ' for you, you old squanchbag.');
 
             fs.rename('res/' + json_file, 'archive/' + json_file + '_' + archive_time, (error) => {
               if (error) {
-                bot.reply(message, 'Okay mothersquancher, I tried to do that but there was an error getting rid of the tags: ' + error);
+                message.reply('Okay mothersquancher, I tried to do that but there was an error getting rid of the tags: ' + error);
               } 
             });
 
           }
         });
       } else {
-        bot.reply(message, 'Listen here squanchacho, I don\'t even know what file you\'re talking about.');
+        message.reply('Listen here squanchacho, I don\'t even know what file you\'re talking about.');
       }
     } else if (message.content.startsWith('!download') || message.content.startsWith('download')) {
       var command_to_download = '!' + message.content.replace(/!download /, '').replace(/download /, '');
@@ -139,10 +139,10 @@ bot.on('message', function(message) {
       if (commands.indexOf(command_to_download) != -1) {
         var audio_file = squanches[commands.indexOf(command_to_download)].filename;
 
-        bot.sendFile(message.channel, 'res/' + audio_file, audio_file);
+        message.channel.sendFile('res/' + audio_file, audio_file);
 
       } else {
-        bot.reply(message, 'You can go download a sack of squanch, I don\' have any command or file like that.');
+        message.reply('You can go download a sack of squanch, I don\' have any command or file like that.');
       }
     } else if (message.content.startsWith('!command') || message.content.startsWith('command')) {
       var command_to_check = '!' + message.content.replace(/!command /, '').replace(/command /, '');
@@ -150,9 +150,9 @@ bot.on('message', function(message) {
         return item.command.toLowerCase();
       });
       if (commands.indexOf(command_to_check) != -1) {
-        bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
+        message.reply(JSON.stringify(squanches[commands.indexOf(command_to_check)]));
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about.');
+        message.reply('I don\'t know what command you\'re asking about.');
       }
     } else if (message.content.startsWith('!tag list') || message.content.startsWith('tag list')) {
       var command_to_check = '!' + message.content.replace(/!tag list /, '').replace(/tag list /, '');
@@ -162,16 +162,16 @@ bot.on('message', function(message) {
       if (commands.indexOf(command_to_check) != -1) {
         var tags = squanches[commands.indexOf(command_to_check)].tags;
         if (tags.length == 0) {
-          bot.reply(message, 'No tags on this one yet');
+          message.reply('No tags on this one yet');
         } else {
           var reply = 'Tags for ' + squanches[commands.indexOf(command_to_check)].command + ":";
           for (var i = 0; i < tags.length; i++) {
             reply += "\r\n" + tags[i];
           }
-          bot.reply(message, reply);
+          message.reply(reply);
         }
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about.');
+        message.reply('I don\'t know what command you\'re asking about.');
       }
     }  else if (message.content.startsWith('!tag add') || message.content.startsWith('tag add')) {
       var command_and_tag = '!' + message.content.replace(/!tag add /, '').replace(/tag add /, '');
@@ -180,12 +180,12 @@ bot.on('message', function(message) {
       var tag_to_add = command_and_tag.join(' ');
 
       if (command_to_check == null || command_to_check == '' || command_to_check == undefined) {
-        bot.reply(message, 'I\'m not sure what command you what to squanch the tags on.');
+        message.reply('I\'m not sure what command you what to squanch the tags on.');
         return false;
       }
 
       if (tag_to_add == null || tag_to_add == '' || tag_to_add == ' ' || tag_to_add == undefined) {
-        bot.reply(message, 'You didn\'t give me any tags to add, you sad squanch, you.');
+        message.reply('You didn\'t give me any tags to add, you sad squanch, you.');
         return false;
       }
 
@@ -206,16 +206,16 @@ bot.on('message', function(message) {
           var extension = squanches[commands.indexOf(command_to_check)].extension;
           fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
             if (error) {
-              bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+              message.reply('Had some kind of error saving your tags: ' + JSON.stringify(error));
             }
           });
-          bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
+          message.reply(JSON.stringify(squanches[commands.indexOf(command_to_check)]));
         } else {
-          bot.reply(message, 'The command already has that squanch loving tag!');
+          message.reply('The command already has that squanch loving tag!');
         }
         
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about, squanchcake.');
+        message.reply('I don\'t know what command you\'re asking about, squanchcake.');
       }
     } else if (message.content.startsWith('!tag remove') || message.content.startsWith('tag remove')) {
       var command_and_tag = '!' + message.content.replace(/!tag remove /, '').replace(/tag remove /, '');
@@ -224,12 +224,12 @@ bot.on('message', function(message) {
       var tag_to_remove = command_and_tag.join(' ');
 
       if (command_to_check == null || command_to_check == '' || command_to_check == undefined) {
-        bot.reply(message, 'I\'m not sure what command you what to squanch the tags on.');
+        message.reply('I\'m not sure what command you what to squanch the tags on.');
         return false;
       }
 
       if (tag_to_remove == null || tag_to_remove == '' || tag_to_remove == ' ' || tag_to_remove == undefined) {
-        bot.reply(message, 'You didn\'t give me any tags to remove, you sad squanch, you.');
+        message.reply('You didn\'t give me any tags to remove, you sad squanch, you.');
         return false;
       }
 
@@ -240,7 +240,7 @@ bot.on('message', function(message) {
         var tags = squanches[commands.indexOf(command_to_check)].tags;
 
         if (tags.indexOf(tag_to_remove) == -1) {
-          bot.reply(message, 'The command doesn\'t have that squanching tag!');
+          message.reply('The command doesn\'t have that squanching tag!');
         } else {
           tags.splice(tags.indexOf(tag_to_remove), 1);
           squanches[commands.indexOf(command_to_check)].tags = tags;
@@ -248,14 +248,14 @@ bot.on('message', function(message) {
           var extension = squanches[commands.indexOf(command_to_check)].extension;
           fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
             if (error) {
-              bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+              message.reply('Had some kind of error saving your tags: ' + JSON.stringify(error));
             }
           });
-          bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
+          message.reply(JSON.stringify(squanches[commands.indexOf(command_to_check)]));
         }
         
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about, squanchcake.');
+        message.reply('I don\'t know what command you\'re asking about, squanchcake.');
       }
     } else if (message.content.startsWith('!tags') || message.content.startsWith('tags')) {
       var all_tags = [];
@@ -282,7 +282,7 @@ bot.on('message', function(message) {
         reply += "\r\n#" + (i + 1) + " - " + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-      bot.reply(message, reply);
+      message.reply(reply);
 
     } else if (message.content.startsWith('!alltags') || message.content.startsWith('alltags')) {
       var all_tags = [];
@@ -309,20 +309,20 @@ bot.on('message', function(message) {
         reply += "\r\n" + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-      bot.reply(message, reply);
+      message.reply(reply);
 
     } else if (message.content.startsWith('!tag search') || message.content.startsWith('tag search')) {
       var params = message.content.split(' ');
 
       if (params.length <= 2) {
-        bot.reply(message, 'You didn\'t give me a tag to squanch for');
+        message.reply('You didn\'t give me a tag to squanch for');
       } else {
         params.splice(0, 2);
         var tag = params.join(' ');
         var filtered_commands = getCommandsByTag(tag);
 
         if (filtered_commands.length == 0) {
-          bot.reply(message, 'I couldn\'t squanch anything for ' + tag);
+          message.reply('I couldn\'t squanch anything for ' + tag);
         } else {
           filtered_commands = filtered_commands.map((item) => {
             return item.command;
@@ -335,13 +335,13 @@ bot.on('message', function(message) {
             reply += "\r\n" + filtered_commands[i];
           }
 
-          bot.reply(message, reply);
+          message.reply(reply);
         }
       }
     } else if (message.author.username != bot.user.username) { //This should always be last
-      bot.reply(message, 'I\'ve never even heard of that command.');
+      message.reply('I\'ve never even heard of that command.');
     }
-  } else {
+  } else { // PM commands above - Channel commands below
 
     var audio_command = message.content.toLowerCase();
 
@@ -350,33 +350,32 @@ bot.on('message', function(message) {
     });
 
     if (commands.indexOf(audio_command) != -1) {
-      var voice_channel = message.author.voiceChannel;
+      var voice_channel = message.member.voiceChannel;
 
       var audio_file = squanches[commands.indexOf(audio_command)].filename;
 
-      bot.deleteMessage(message);
+      message.delete();
 
-      bot.joinVoiceChannel(voice_channel, function(error, connection) {
-        global_audio_connection = connection;
-        console.log('res/' + audio_file);
-        connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-          intent.on('end', function(){
-            setTimeout(function(){
-              connection.destroy();
-              global_audio_connection = null;
-            }, 1000);
+      voice_channel.join()
+        .then(connection => {
+          console.log('res/' + audio_file);
+          global_audio_connection = connection;
+          var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+          dispatcher.once('end', () => {
+            connection.disconnect();
+            global_audio_connection = null;
           });
-        });
-      });
+        })
+        .catch(console.error);
     }
 
     if (message.content === '!commands' || message.content === '!help') {
-      bot.sendMessage(message.channel, getCommands(), {}, function(error, sent_message){
-        setTimeout(function(){
-          bot.deleteMessage(message);
-          bot.deleteMessage(sent_message);
-        }, 10000);
-      });
+      message.channel.sendMessage(getCommands())
+        .then(sent_message => {
+          message.delete(10000);
+          sent_message.delete(10000);
+        })
+        .catch(console.error);
     }
 
     if (message.content.startsWith('!wolfram ')) {
@@ -406,55 +405,16 @@ bot.on('message', function(message) {
                 }
               }
 
-              bot.sendMessage(message.channel, return_string);
-              // console.log(return_string);
+              message.channel.sendMessage(return_string);
 
               for (var k = 0; k < images.length; k++) {
-                bot.sendFile(message.channel, images[k], uuid.v4()+'.jpg');
+                message.channel.sendFile(images[k], uuid.v4()+'.jpg');
               }
 
-              // var getImage = function(image_list) {
-              //   var image = 'tmp/' + uuid.v4() + '.gif';
-              //   var file = fs.createWriteStream(image_list[0]);
-              //   console.log(image_list[0]);
-              //   http.get(image_list[0], (res) => {
-              //     res.pipe(file);
-              //     image_list.shift();
-              //     console.log('got image');
-              //     getImage(image_list);
-              //     // bot.sendFile(message.channel, image, function(error){
-              //     //   fs.unlink(image, (error) => {
-              //     //     if (error) throw error;
-              //     //   });
-              //     // });
-              //   }).on('error', (error) => {
-              //     throw error;
-              //   });
-              // };
-
-              // if (images.length > 0) {
-              //   getImage(images);
-              // }
-              
-              // for (var k = 0; k < images.length; k++) {
-              //   var image = 'tmp/' + uuid.v4() + '.gif';
-              //   var file = fs.createWriteStream(image);
-              //   console.log(images[k]);
-              //   http.get(images[k], (res) => {
-              //     res.pipe(file);
-              //     // bot.sendFile(message.channel, image, function(error){
-              //     //   fs.unlink(image, (error) => {
-              //     //     if (error) throw error;
-              //     //   });
-              //     // });
-              //   }).on('error', (error) => {
-              //     throw error;
-              //   });
-              // }
             }
 
             if (result.length == 0) {
-              bot.reply(message, 'Wolfram can\'t squanch that');
+              message.reply('Wolfram can\'t squanch that');
             }
           });
         } catch (error) {
@@ -468,12 +428,12 @@ bot.on('message', function(message) {
 
       var image_uuid = uuid.v4();
 
-      bot.deleteMessage(message);
+      message.delete();
 
       request(image, {encoding: 'binary'}, function(error, response, body){
         if (error) {
           console.log(error);
-          bot.sendMessage(message.channel, 'I\'m sorry to have to tell you this, but the server you wanted me to go to is completely squanched');
+          message.channel.sendMessage('I\'m sorry to have to tell you this, but the server you wanted me to go to is completely squanched');
           return 0;
         }
 
@@ -500,7 +460,7 @@ bot.on('message', function(message) {
               extension = ".png";
               break;
             default:
-              bot.sendMessage(message.channel, 'I don\t know what you\'re trying to pull here buddy but that ain\'t no squanching image');
+              message.channel.sendMessage('I don\t know what you\'re trying to pull here buddy but that ain\'t no squanching image');
               return false;
               break;
           }
@@ -514,17 +474,14 @@ bot.on('message', function(message) {
           fs.writeFile(image_file, body, 'binary', function(error){
             if (error) {
               console.log(error);
-              bot.sendMessage(message.channel, 'Sorry bud, I couldn\'t squanch that image');
+              message.channel.sendMessage('Sorry bud, I couldn\'t squanch that image');
               return 0;
             }
-
-            // bot.sendMessage(message.channel, 'got the image: ' + image_file);
-            // bot.sendFile(message.channel, image_file);
 
             im.identify(image_file, function(error, features){
               if (error) {
                 console.log(error);
-                bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                 return 0;
               }
               console.log(features);
@@ -541,38 +498,33 @@ bot.on('message', function(message) {
               var after_resize = function(error, stdout) {
                 if (error) {
                   console.log(error);
-                  bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                  message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                   return 0;
                 }
                 console.log('stdout: ' + stdout);
-                // bot.sendFile(message.channel, resize_image_file);
 
                 im.convert([resize_image_file, '-background', 'None', '-rotate', rotation_angle, rotate_image_file], function(error, stdout){
                   if (error) {
                     console.log(error);
-                    bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                    message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                     return 0;
                   }
-
-                  // bot.sendFile(message.channel, rotate_image_file);
 
                   im.convert([background_image, rotate_image_file, '-geometry', '+725+300', '-composite', composite_image_file], function(error, stdout){
                     if (error) {
                       console.log(error);
-                      bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                      message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                       return 0;
                     }
-
-                    // bot.sendFile(message.channel, composite_image_file);
 
                     im.convert([composite_image_file, foreground_image, '-composite', final_image_file], function(error, stdout){
                       if (error) {
                         console.log(error);
-                        bot.sendMessage(message.channel, 'Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
+                        message.channel.sendMessage('Uh, sorry pal. I\'m having a real squanchy time trying to put these images together');
                         return 0;
                       }
 
-                      bot.sendFile(message.channel, final_image_file);
+                      message.channel.sendFile(final_image_file);
                     });
 
                   });
@@ -591,72 +543,10 @@ bot.on('message', function(message) {
           });
 
         } else {
-          bot.sendMessage(message.channel, 'Sorry bud, I couldn\'t squanch that image');
+          message.channel.sendMessage('Sorry bud, I couldn\'t squanch that image');
         }
 
       });
-
-      // request
-      //   .get(image)
-      //   .on('response', (response) => {
-      //     console.log(response.headers);
-      //     console.log(response.statusCode);
-      //     console.log(response.statusMessage);
-
-      //     if (response.statusCode === 200) {
-      //       var image_file = 'tmp/' + image_uuid;
-
-      //       switch (response.headers['content-type']) {
-      //         case 'image/gif':
-      //           image_file += '.gif';
-      //           break;
-      //         case 'image/jpeg':
-      //           image_file += '.jpg';
-      //           break;
-      //         case 'image/png':
-      //           image_file += '.png';
-      //           break;
-      //         default:
-      //           bot.sendMessage(message.channel, 'I don\t know what you\'re trying to pull here buddy but that ain\'t no squanching image');
-      //           return false;
-      //           break;
-      //       }
-
-      //       var ws = fs.createWriteStream(image_file);
-
-      //       response.pipe(ws, function(error){
-      //         if (error) console.log(error);
-      //         bot.sendMessage(message.channel, 'got the image: ' + image_file);
-
-      //         im.identify(image_file, function(error, features){
-      //           if (error) console.log(error);
-      //           console.log(features);
-
-      //           // var target_width = 355;
-      //           // var target_height = 252;
-      //           // var quality = 80;
-      //           // var rotation_angle = -14.33;
-      //           // var background_image = 'lookatthisphotograph_base.png';
-      //           // var foreground_image = 'lookatthisphotograph_over.png';
-
-      //           // im.convert([image_file, '-resize', target_width + 'x' + target_height, '-gravity', 'center', '-crop', target_width + 'x' + target_height + '0+0', '+repage', image_file + '_resize'], function(error, stdout){
-      //           //   if (error) console.log(error);
-      //           //   console.log('stdout: ' + stdout);
-      //           //   bot.sendFile(message.channel, image_file + '_resize');
-      //           // });
-
-
-      //         });
-      //       });
-
-      //     } else {
-      //       bot.sendMessage(message.channel, 'Sorry bud, I couldn\'t squanch that image');
-      //     }
-      //   })
-      //   .on('error', (error) => {
-      //     console.log(error);
-      //     bot.sendMessage(message.channel, 'I\'m sorry to have to tell you this, but the server you wanted me to go to is completely squanched');
-      //   });
     }
 
     if (message.content.startsWith('!tags')) {
@@ -684,7 +574,7 @@ bot.on('message', function(message) {
         reply += "\r\n#" + (i + 1) + " - " + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-      bot.sendMessage(message.channel, reply);
+      message.channel.sendMessage(reply);
     }
 
     if (message.content.startsWith('!alltags')) {
@@ -712,57 +602,55 @@ bot.on('message', function(message) {
         reply += "\r\n" + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-       bot.sendMessage(message.channel, reply);
+       message.channel.sendMessage(reply);
 
     }
 
     if (message.content.startsWith('!random')) {
       var params = message.content.split(' ');
-      var voice_channel = message.author.voiceChannel;
-      bot.deleteMessage(message);
+      var voice_channel = message.member.voiceChannel;
+      message.delete();
 
       if (params.length <= 1) {
 
         var audio_file = squanches[Math.floor(Math.random()*squanches.length)].filename;
 
-        bot.joinVoiceChannel(voice_channel, function(error, connection) {
-          global_audio_connection = connection;
-          console.log('res/' + audio_file);
-          connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-            intent.on('end', function(){
-              setTimeout(function(){
-                connection.destroy();
-                global_audio_connection = null;
-              }, 1000);
+        voice_channel.join()
+          .then(connection => {
+            console.log('res/' + audio_file);
+            global_audio_connection = connection;
+            var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+            dispatcher.once('end', () => {
+              connection.disconnect();
+              global_audio_connection = null;
             });
-          });
-        });
+          })
+          .catch(console.error);
       } else {
         var tag = params[1];
         var filtered_commands = getCommandsByTag(tag);
 
         if (filtered_commands.length == 0) {
-          bot.sendMessage(message.channel, 'I can\'t randomly squanch anything for that particular tag, bub', {}, function(error, sent_message){
-            setTimeout(function(){
-              bot.deleteMessage(message);
-              bot.deleteMessage(sent_message);
-            }, 5000);
-          });
+          message.channel.sendMessage('I can\'t randomly squanch anything for that particular tag, bub')
+            .then(sent_message => {
+              message.delete(5000);
+              sent_message.delete(5000);
+            })
+            .catch(console.error);
         } else {
           var audio_file = filtered_commands[Math.floor(Math.random()*filtered_commands.length)].filename;
 
-          bot.joinVoiceChannel(voice_channel, function(error, connection) {
-            global_audio_connection = connection;
-            console.log('res/' + audio_file);
-            connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-              intent.on('end', function(){
-                setTimeout(function(){
-                  connection.destroy();
-                  global_audio_connection = null;
-                }, 1000);
+          voice_channel.join()
+            .then(connection => {
+              console.log('res/' + audio_file);
+              global_audio_connection = connection;
+              var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+              dispatcher.once('end', () => {
+                connection.disconnect();
+                global_audio_connection = null;
               });
-            });
-          });
+            })
+            .catch(console.error);
         }
       }
     }
@@ -771,24 +659,24 @@ bot.on('message', function(message) {
       var params = message.content.split(' ');
 
       if (params.length <= 2) {
-        bot.sendMessage(message.channel, 'You didn\'t give me a tag to squanch for', {}, function(error, sent_message){
-          setTimeout(function(){
-            bot.deleteMessage(message);
-            bot.deleteMessage(sent_message);
-          }, 5000);
-        });
+        message.channel.sendMessage('You didn\'t give me a tag to squanch for')
+          .then(sent_message => {
+            message.delete(5000);
+            sent_message.delete(5000);
+          })
+          .catch(console.error);
       } else {
         params.splice(0, 2);
         var tag = params.join(' ');
         var filtered_commands = getCommandsByTag(tag);
 
         if (filtered_commands.length == 0) {
-          bot.sendMessage(message.channel, 'I couldn\'t squanch anything for ' + tag, {}, function(error, sent_message){
-            setTimeout(function(){
-              bot.deleteMessage(message);
-              bot.deleteMessage(sent_message);
-            }, 5000);
-          });
+          message.channel.sendMessage('I couldn\'t squanch anything for ' + tag)
+            .then(sent_message => {
+              message.delete(5000);
+              sent_message.delete(5000);
+            })
+            .catch(console.error);
         } else {
           filtered_commands = filtered_commands.map((item) => {
             return item.command;
@@ -801,12 +689,12 @@ bot.on('message', function(message) {
             reply += "\r\n" + filtered_commands[i];
           }
 
-          bot.sendMessage(message.channel, reply, {}, function(error, sent_message){
-            setTimeout(function(){
-              bot.deleteMessage(message);
-              bot.deleteMessage(sent_message);
-            }, 5000);
-          });
+          message.channel.sendMessage(reply)
+            .then(sent_message => {
+              message.delete(5000);
+              sent_message.delete(5000);
+            })
+            .catch(console.error);
         }
       }
     }
@@ -814,22 +702,20 @@ bot.on('message', function(message) {
   //end of channel commands
   }
 
-  if (message.content === 'ping') {
-    bot.sendMessage(message.channel, "Oh what, like I'm supposed to squanch around waiting to say 'pong' for you?");
+  if (message.content === '!ping') {
+    message.channel.sendMessage('Oh what, like I\'m supposed to squanch around waiting to say \'pong\' for you?')
+      .then(sent_message => {
+        message.delete(5000);
+              sent_message.delete(5000);
+      })
+      .catch(console.error);
   }
 
   if (message.content === '!stop') {
     if (global_audio_connection != null) {
-      global_audio_connection.stopPlaying();
+      global_audio_connection.player.dispatcher.end();
     }
-  }
-
-  if (message.content === '!rule34') {
-    bot.sendFile(message.channel, 'rule34.jpg', function(error, this_message){
-      setTimeout(function(){
-        bot.deleteMessage(this_message);
-      }, 10000);
-    });
+    message.delete(5000);
   }
 
   if (message.content.startsWith('!ud ')) {
@@ -856,18 +742,14 @@ bot.on('message', function(message) {
       }
 
       var sendChunk = function(send_chunks) {
-        bot.sendMessage(message.channel, send_chunks[0], function(error){
-          if (error) {
-            console.log(error);
-            return 0;
-          }
-
-          send_chunks.shift();
-          if (send_chunks.length > 0) {
-            sendChunk(send_chunks);
-          }
-
-        });
+        message.channel.sendMessage(send_chunks[0])
+          .then( sent_message => {
+            send_chunks.shift();
+            if (send_chunks.length > 0) {
+              sendChunk(send_chunks);
+            }
+          })
+          .catch(console.error);
       };
 
       if (chunks.length > 0) {
@@ -913,7 +795,7 @@ bot.on('ready', function() {
 bot.on('disconnected', function(){
   console.log('Squanchbot reconnecting...');
   if (config.get('bot.token') != null) {
-    bot.loginWithToken(config.get('bot.token'), (error, token) => {
+    bot.login(config.get('bot.token'), (error, token) => {
       if (error) {
         console.log(error);
       } else {
@@ -924,11 +806,13 @@ bot.on('disconnected', function(){
 });
 
 if (config.get('bot.token') != null) {
-  bot.loginWithToken(config.get('bot.token'), (error, token) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Squanchbot connected');
-    }
-  });
+  bot.login(config.get('bot.token'));
 }
+
+bot.on('ready', () => {
+  console.log("Squanchbot connected");
+});
+
+bot.on('error', e => {
+  console.error(e);
+});
