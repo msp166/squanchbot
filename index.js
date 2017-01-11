@@ -274,7 +274,7 @@ bot.on('message', function(message) {
       }
 
       all_tags.sort((a, b) => {
-        return a.count - b.count;
+        return b.count - a.count;
       });
 
       var reply = "Here are the top 25 tags in the squanch list:";
@@ -301,11 +301,19 @@ bot.on('message', function(message) {
       }
 
       all_tags.sort((a, b) => {
-        return a.tag - b.tag;
+        var a_tag = a.tag.toUpperCase();
+        var b_tag = b.tag.toUpperCase();
+        if (a_tag < b_tag) {
+          return -1;
+        } else if (a_tag > b_tag) {
+          return 1;
+        } else {
+          return 0;
+        }
       });
 
-      var reply = "Here are the top 25 tags in the squanch list:";
-      for (var i = 0; i < all_tags.length && i < 24; i++) {
+      var reply = "Here are all the tags in the squanch list:";
+      for (var i = 0; i < all_tags.length; i++) {
         reply += "\r\n" + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
@@ -566,7 +574,7 @@ bot.on('message', function(message) {
       }
 
       all_tags.sort((a, b) => {
-        return a.count - b.count;
+        return b.count - a.count;
       });
 
       var reply = "Here are the top 25 tags in the squanch list:";
@@ -594,7 +602,15 @@ bot.on('message', function(message) {
       }
 
       all_tags.sort((a, b) => {
-        return a.tag - b.tag;
+        var a_tag = a.tag.toUpperCase();
+        var b_tag = b.tag.toUpperCase();
+        if (a_tag < b_tag) {
+          return -1;
+        } else if (a_tag > b_tag) {
+          return 1;
+        } else {
+          return 0;
+        }
       });
 
       var reply = "Here are all the tags in the squanch list:";
