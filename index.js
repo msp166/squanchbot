@@ -224,12 +224,12 @@ bot.on('message', function(message) {
       var tag_to_remove = command_and_tag.join(' ');
 
       if (command_to_check == null || command_to_check == '' || command_to_check == undefined) {
-        bot.reply(message, 'I\'m not sure what command you what to squanch the tags on.');
+        message.reply('I\'m not sure what command you what to squanch the tags on.');
         return false;
       }
 
       if (tag_to_remove == null || tag_to_remove == '' || tag_to_remove == ' ' || tag_to_remove == undefined) {
-        bot.reply(message, 'You didn\'t give me any tags to remove, you sad squanch, you.');
+        message.reply('You didn\'t give me any tags to remove, you sad squanch, you.');
         return false;
       }
 
@@ -240,7 +240,7 @@ bot.on('message', function(message) {
         var tags = squanches[commands.indexOf(command_to_check)].tags;
 
         if (tags.indexOf(tag_to_remove) == -1) {
-          bot.reply(message, 'The command doesn\'t have that squanching tag!');
+          message.reply('The command doesn\'t have that squanching tag!');
         } else {
           tags.splice(tags.indexOf(tag_to_remove), 1);
           squanches[commands.indexOf(command_to_check)].tags = tags;
@@ -248,14 +248,14 @@ bot.on('message', function(message) {
           var extension = squanches[commands.indexOf(command_to_check)].extension;
           fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
             if (error) {
-              bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+              message.reply('Had some kind of error saving your tags: ' + JSON.stringify(error));
             }
           });
-          bot.reply(message, JSON.stringify(squanches[commands.indexOf(command_to_check)]));
+          message.reply(JSON.stringify(squanches[commands.indexOf(command_to_check)]));
         }
         
       } else {
-        bot.reply(message, 'I don\'t know what command you\'re asking about, squanchcake.');
+        message.reply('I don\'t know what command you\'re asking about, squanchcake.');
       }
     } else if (message.content.startsWith('!tags') || message.content.startsWith('tags')) {
       var all_tags = [];
@@ -282,7 +282,7 @@ bot.on('message', function(message) {
         reply += "\r\n#" + (i + 1) + " - " + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-      bot.reply(message, reply);
+      message.reply(reply);
 
     } else if (message.content.startsWith('!alltags') || message.content.startsWith('alltags')) {
       var all_tags = [];
