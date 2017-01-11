@@ -742,18 +742,14 @@ bot.on('message', function(message) {
       }
 
       var sendChunk = function(send_chunks) {
-        bot.sendMessage(message.channel, send_chunks[0], function(error){
-          if (error) {
-            console.log(error);
-            return 0;
-          }
-
-          send_chunks.shift();
-          if (send_chunks.length > 0) {
-            sendChunk(send_chunks);
-          }
-
-        });
+        message.channel.sendMessage(send_chunks[0])
+          .then( sent_message => {
+            send_chunks.shift();
+            if (send_chunks.length > 0) {
+              sendChunk(send_chunks);
+            }
+          })
+          .catch(console.error);
       };
 
       if (chunks.length > 0) {
