@@ -309,20 +309,20 @@ bot.on('message', function(message) {
         reply += "\r\n" + all_tags[i].tag + " - count: " + all_tags[i].count;
       }
 
-      bot.reply(message, reply);
+      message.reply(reply);
 
     } else if (message.content.startsWith('!tag search') || message.content.startsWith('tag search')) {
       var params = message.content.split(' ');
 
       if (params.length <= 2) {
-        bot.reply(message, 'You didn\'t give me a tag to squanch for');
+        message.reply('You didn\'t give me a tag to squanch for');
       } else {
         params.splice(0, 2);
         var tag = params.join(' ');
         var filtered_commands = getCommandsByTag(tag);
 
         if (filtered_commands.length == 0) {
-          bot.reply(message, 'I couldn\'t squanch anything for ' + tag);
+          message.reply('I couldn\'t squanch anything for ' + tag);
         } else {
           filtered_commands = filtered_commands.map((item) => {
             return item.command;
@@ -335,7 +335,7 @@ bot.on('message', function(message) {
             reply += "\r\n" + filtered_commands[i];
           }
 
-          bot.reply(message, reply);
+          message.reply(reply);
         }
       }
     } else if (message.author.username != bot.user.username) { //This should always be last
