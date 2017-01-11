@@ -721,14 +721,6 @@ bot.on('message', function(message) {
     message.delete(5000);
   }
 
-  if (message.content === '!rule34') {
-    bot.sendFile(message.channel, 'rule34.jpg', function(error, this_message){
-      setTimeout(function(){
-        bot.deleteMessage(this_message);
-      }, 10000);
-    });
-  }
-
   if (message.content.startsWith('!ud ')) {
     var query = message.content.replace(/!ud /, '');
     var results = urban(query);
