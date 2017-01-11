@@ -55,10 +55,10 @@ var bot = new Discord.Client();
 bot.on('message', function(message) {
 
   if (message.channel.name === undefined) {
-    if (message.attachments.length > 0 && message.author.username != bot.user.username) {
-      var filename = message.attachments[0].filename;
+    if (message.attachments.array().length > 0 && message.author.username != bot.user.username) {
+      var filename = message.attachments.array()[0].filename;
       filename = filename.replace(/ /g, '_');
-      var url = message.attachments[0].url;
+      var url = message.attachments.array()[0].url;
       var extension = filename.substring(filename.lastIndexOf('.'));
       var command = '!' + filename.replace(extension, '').toLowerCase();
       
@@ -83,23 +83,23 @@ bot.on('message', function(message) {
             res.pipe(file);
             fs.writeFile('res/' + filename.replace(extension, '.json'), JSON.stringify({tags: tags}), 'utf8', (error) => {
               if (error) {
-                bot.reply(message, 'Had some kind of error saving your tags: ' + JSON.stringify(error));
+                message.reply('Had some kind of error saving your tags: ' + JSON.stringify(error));
               }
             });
             squanches.push({filename: filename, extension: extension, command: command, tags: tags});
             console.log(squanches);
-            bot.reply(message, 'Added ' + command);
+            message.reply('Added ' + command);
           }).on('error', (e) => {
-            bot.reply(message, e);
+            message.reply(e);
           });
         } else {
-          bot.reply(message, 'Okay, well, I\'ve already got a file with that name so go squanch yourself!');
+          message.reply('Okay, well, I\'ve already got a file with that name so go squanch yourself!');
         }
       } else {
-        bot.reply(message, 'Come on dude, that\'s not even an audio squanch. I can only do .ogg, .mp3 or .wav');
+        message.reply('Come on dude, that\'s not even an audio squanch. I can only do .ogg, .mp3 or .wav');
       }
     } else if (message.content === '!commands' || message.content == 'commands' || message.content === '!help' || message.content === 'help') {
-      bot.reply(message, getCommands());
+      message.reply(getCommands());
     } else if (message.content.startsWith('!delete ') || message.content.startsWith('delete ')) {
       var command_to_delete = '!' + message.content.replace(/!delete /, '').replace(/delete /, '');
       var commands = squanches.map((item) => {
@@ -339,7 +339,7 @@ bot.on('message', function(message) {
         }
       }
     } else if (message.author.username != bot.user.username) { //This should always be last
-      bot.reply(message, 'I\'ve never even heard of that command.');
+      message.reply('I\'ve never even heard of that command.');
     }
   } else {
 
