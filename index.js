@@ -619,49 +619,6 @@ bot.on('message', function(message) {
         var audio_file = squanches[Math.floor(Math.random()*squanches.length)].filename;
 
         voice_channel.join()
-        .then(connection => {
-          console.log('res/' + audio_file);
-          global_audio_connection = connection;
-          var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
-          dispatcher.once('end', () => {
-            connection.disconnect();
-            global_audio_connection = null;
-          });
-        })
-        .catch(console.error);
-      } else {
-        var tag = params[1];
-        var filtered_commands = getCommandsByTag(tag);
-
-        if (filtered_commands.length == 0) {
-        //   bot.sendMessage(message.channel, 'I can\'t randomly squanch anything for that particular tag, bub', {}, function(error, sent_message){
-        //     setTimeout(function(){
-        //       bot.deleteMessage(message);
-        //       bot.deleteMessage(sent_message);
-        //     }, 5000);
-        //   });
-          message.channel.sendMessage('I can\'t randomly squanch anything for that particular tag, bub')
-            .then(sent_message => {
-              message.delete(5000);
-              sent_message.delete(5000);
-            })
-            .catch(console.error);
-        } else {
-          var audio_file = filtered_commands[Math.floor(Math.random()*filtered_commands.length)].filename;
-
-          // bot.joinVoiceChannel(voice_channel, function(error, connection) {
-          //   global_audio_connection = connection;
-          //   console.log('res/' + audio_file);
-          //   connection.playFile('res/' + audio_file, 0.25, function(error, intent){
-          //     intent.on('end', function(){
-          //       setTimeout(function(){
-          //         connection.destroy();
-          //         global_audio_connection = null;
-          //       }, 1000);
-          //     });
-          //   });
-          // });
-          voice_channel.join()
           .then(connection => {
             console.log('res/' + audio_file);
             global_audio_connection = connection;
@@ -672,6 +629,31 @@ bot.on('message', function(message) {
             });
           })
           .catch(console.error);
+      } else {
+        var tag = params[1];
+        var filtered_commands = getCommandsByTag(tag);
+
+        if (filtered_commands.length == 0) {
+          message.channel.sendMessage('I can\'t randomly squanch anything for that particular tag, bub')
+            .then(sent_message => {
+              message.delete(5000);
+              sent_message.delete(5000);
+            })
+            .catch(console.error);
+        } else {
+          var audio_file = filtered_commands[Math.floor(Math.random()*filtered_commands.length)].filename;
+
+          voice_channel.join()
+            .then(connection => {
+              console.log('res/' + audio_file);
+              global_audio_connection = connection;
+              var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+              dispatcher.once('end', () => {
+                connection.disconnect();
+                global_audio_connection = null;
+              });
+            })
+            .catch(console.error);
         }
       }
     }
@@ -680,24 +662,24 @@ bot.on('message', function(message) {
       var params = message.content.split(' ');
 
       if (params.length <= 2) {
-        bot.sendMessage(message.channel, 'You didn\'t give me a tag to squanch for', {}, function(error, sent_message){
-          setTimeout(function(){
-            bot.deleteMessage(message);
-            bot.deleteMessage(sent_message);
-          }, 5000);
-        });
+        message.channel.sendMessage('You didn\'t give me a tag to squanch for')
+          .then(sent_message => {
+            message.delete(5000);
+            sent_message.delete(5000);
+          })
+          .catch(console.error);
       } else {
         params.splice(0, 2);
         var tag = params.join(' ');
         var filtered_commands = getCommandsByTag(tag);
 
         if (filtered_commands.length == 0) {
-          bot.sendMessage(message.channel, 'I couldn\'t squanch anything for ' + tag, {}, function(error, sent_message){
-            setTimeout(function(){
-              bot.deleteMessage(message);
-              bot.deleteMessage(sent_message);
-            }, 5000);
-          });
+          message.channel.sendMessage('I couldn\'t squanch anything for ' + tag)
+            .then(sent_message => {
+              message.delete(5000);
+              sent_message.delete(5000);
+            })
+            .catch(console.error);
         } else {
           filtered_commands = filtered_commands.map((item) => {
             return item.command;
@@ -710,12 +692,12 @@ bot.on('message', function(message) {
             reply += "\r\n" + filtered_commands[i];
           }
 
-          bot.sendMessage(message.channel, reply, {}, function(error, sent_message){
-            setTimeout(function(){
-              bot.deleteMessage(message);
-              bot.deleteMessage(sent_message);
-            }, 5000);
-          });
+          message.channel.sendMessage(reply)
+            .then(sent_message => {
+              message.delete(5000);
+              sent_message.delete(5000);
+            })
+            .catch(console.error);
         }
       }
     }
