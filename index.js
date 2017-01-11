@@ -115,21 +115,21 @@ bot.on('message', function(message) {
 
         fs.rename('res/' + audio_file, 'archive/' + audio_file + '_' + archive_time, (error) => {
           if (error) {
-            bot.reply(message, 'Okay mothersquancher, I tried to do that but there was an error: ' + error);
+            message.reply('Okay mothersquancher, I tried to do that but there was an error: ' + error);
           } else {
             squanches.splice(commands.indexOf(command_to_delete), 1);
-            bot.reply(message, 'I deleted ' + audio_file + ' for you, you old squanchbag.');
+            message.reply('I deleted ' + audio_file + ' for you, you old squanchbag.');
 
             fs.rename('res/' + json_file, 'archive/' + json_file + '_' + archive_time, (error) => {
               if (error) {
-                bot.reply(message, 'Okay mothersquancher, I tried to do that but there was an error getting rid of the tags: ' + error);
+                message.reply('Okay mothersquancher, I tried to do that but there was an error getting rid of the tags: ' + error);
               } 
             });
 
           }
         });
       } else {
-        bot.reply(message, 'Listen here squanchacho, I don\'t even know what file you\'re talking about.');
+        message.reply('Listen here squanchacho, I don\'t even know what file you\'re talking about.');
       }
     } else if (message.content.startsWith('!download') || message.content.startsWith('download')) {
       var command_to_download = '!' + message.content.replace(/!download /, '').replace(/download /, '');
