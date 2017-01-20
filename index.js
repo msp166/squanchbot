@@ -99,7 +99,12 @@ bot.on('message', function(message) {
         message.reply('Come on dude, that\'s not even an audio squanch. I can only do .ogg, .mp3 or .wav');
       }
     } else if (message.content === '!commands' || message.content == 'commands' || message.content === '!help' || message.content === 'help') {
-      message.reply(getCommands());
+      // message.reply(getCommands());
+      var commands = getCommands();
+      while (commands.length > 100) {
+        commands_chunk = commands.splice(0, (commands.length >= 100) ? 100 : commands.length);
+        message.reply(commands_chunk);
+      }
     } else if (message.content.startsWith('!delete ') || message.content.startsWith('delete ')) {
       var command_to_delete = '!' + message.content.replace(/!delete /, '').replace(/delete /, '');
       var commands = squanches.map((item) => {
@@ -368,7 +373,7 @@ bot.on('message', function(message) {
         .then(connection => {
           console.log('res/' + audio_file);
           global_audio_connection = connection;
-          var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+          var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.75});
           dispatcher.once('end', () => {
             connection.disconnect();
             global_audio_connection = null;
@@ -635,7 +640,7 @@ bot.on('message', function(message) {
           .then(connection => {
             console.log('res/' + audio_file);
             global_audio_connection = connection;
-            var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+            var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.75});
             dispatcher.once('end', () => {
               connection.disconnect();
               global_audio_connection = null;
@@ -660,7 +665,7 @@ bot.on('message', function(message) {
             .then(connection => {
               console.log('res/' + audio_file);
               global_audio_connection = connection;
-              var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.25});
+              var dispatcher = connection.playFile('res/' + audio_file, {volume: 0.75});
               dispatcher.once('end', () => {
                 connection.disconnect();
                 global_audio_connection = null;
