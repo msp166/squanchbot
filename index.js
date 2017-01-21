@@ -105,6 +105,7 @@ bot.on('message', function(message) {
         commands_chunk = commands.splice(0, (commands.length >= 100) ? 100 : commands.length);
         message.reply(commands_chunk);
       }
+      message.reply(commands);
     } else if (message.content.startsWith('!delete ') || message.content.startsWith('delete ')) {
       var command_to_delete = '!' + message.content.replace(/!delete /, '').replace(/delete /, '');
       var commands = squanches.map((item) => {
