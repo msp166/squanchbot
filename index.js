@@ -102,7 +102,7 @@ bot.on('message', function(message) {
       // message.reply(getCommands());
       var commands = getCommands();
       while (commands.length > 100) {
-        commands_chunk = commands.splice(0, (commands.length >= 100) ? 100 : commands.length);
+        var commands_chunk = commands.splice(0, (commands.length >= 100) ? 100 : commands.length);
         message.reply(commands_chunk);
       }
       message.reply(commands);
@@ -384,7 +384,16 @@ bot.on('message', function(message) {
     }
 
     if (message.content === '!commands' || message.content === '!help') {
-      message.channel.sendMessage(getCommands())
+      var commands = getCommands();
+      while (commands.length >= 100) {
+        var commands_chunk = commands.splice(0, (commands.length >= 100) ? 100 : commands.length);
+        message.channel.sendMessage(commands_chunk)
+          .then(sent_message => {
+            sent_message.delete(10000);
+          })
+          .catch(console.error);
+      }
+      message.channel.sendMessage(commands)
         .then(sent_message => {
           message.delete(10000);
           sent_message.delete(10000);
